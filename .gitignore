@@ -1,0 +1,13 @@
+# Ignore les dossiers de dépendances des deux sous-projets
+sbee-sport-app/node_modules
+sbee-sport-app/dist
+sbee-sport-app/.vite
+
+sbee-sport-api/node_modules
+sbee-sport-api/vendor
+sbee-sport-api/.env
+
+# Ignore les fichiers système et logs
+.DS_Store
+*.log
+.env.local
