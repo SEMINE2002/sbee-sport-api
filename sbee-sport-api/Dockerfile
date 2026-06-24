@@ -23,8 +23,17 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available
 # Installation de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Installation des dépendances (sans --no-dev pour inclure les packages requis comme Telescope)
+# Installation des dépendances
 RUN composer install --optimize-autoloader --ignore-platform-req=ext-zip
 
 # Attribution des permissions correctes pour Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Création d'un script de démarrage pour nettoyer le cache et migrer à chaque lancement
+RUN echo '#!/bin/bash\n\
+php /var/www/html/artisan config:cache\n\
+php /var/www/html/artisan migrate --force\n\
+apache2-foreground' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
+
+# Lancement du script
+CMD ["/usr/local/bin/start.sh"]
