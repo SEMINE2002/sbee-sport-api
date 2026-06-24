@@ -44,7 +44,7 @@ return [
             'transaction_mode' => 'DEFERRED',
         ],
 
-     'mysql' => [
+    'mysql' => [
             'driver' => 'mysql',
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -59,10 +59,12 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_MODE => PDO::MYSQL_SSL_MODE_REQUIRED,
-                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
-            ]) : [],
+            'options' => [
+                // 1002 = PDO::MYSQL_ATTR_SSL_MODE, 2 = PDO::MYSQL_SSL_MODE_REQUIRED
+                1002 => 2,
+                // 1011 = PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT, 0 = false
+                1011 => 0,
+            ],
         ],
 
         'mariadb' => [
