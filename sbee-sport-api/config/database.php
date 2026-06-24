@@ -44,7 +44,7 @@ return [
             'transaction_mode' => 'DEFERRED',
         ],
 
-       'mysql' => [
+      'mysql' => [
             'driver' => 'mysql',
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -60,8 +60,10 @@ return [
             'strict' => true,
             'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
             'options' => [
-                PDO::MYSQL_ATTR_SSL_MODE => PDO::MYSQL_SSL_MODE_REQUIRED,
-                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                // Utilisation de constantes numériques pour éviter les erreurs de constantes manquantes
+                // 1002 = PDO::MYSQL_ATTR_SSL_MODE, 2 = PDO::MYSQL_SSL_MODE_REQUIRED
+                1002 => 2, 
             ],
         ],
 
