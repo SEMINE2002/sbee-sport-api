@@ -23,8 +23,8 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available
 # Installation de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Installation des dépendances avec une sécurité supplémentaire
-RUN composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-zip
+# Installation des dépendances (sans --no-dev pour inclure les packages requis comme Telescope)
+RUN composer install --optimize-autoloader --ignore-platform-req=ext-zip
 
 # Attribution des permissions correctes pour Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
