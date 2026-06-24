@@ -1,9 +1,10 @@
 FROM php:8.2-apache
 
 # Installation des dépendances nécessaires
-RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip
+# Installation des dépendances nécessaires
+RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip unzip libzip-dev
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql
+    && docker-php-ext-install gd pdo pdo_mysql zip
 
 # Copie des fichiers du projet
 COPY . /var/www/html
