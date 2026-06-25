@@ -60,12 +60,9 @@ return [
             'strict' => true,
             'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
             'options' => [
-                // 1002 => 2 (SSL_MODE_REQUIRED)
-                1002 => 2,
-                // 1011 => 0 (SSL_VERIFY_SERVER_CERT => false)
-                1011 => 0,
-                // Désactivation de la vérification CA si le dossier est vide
-                PDO::MYSQL_ATTR_SSL_CA => null, 
+                1002 => 2,   // PDO::MYSQL_ATTR_SSL_MODE => 2 (REQUIRED)
+                1011 => 0,   // PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => 0 (false)
+                1016 => null // PDO::MYSQL_ATTR_SSL_CA => null (désactive le check CA)
             ],
         ],
 
