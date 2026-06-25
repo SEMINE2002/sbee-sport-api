@@ -60,10 +60,11 @@ return [
             'strict' => true,
             'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
             'options' => [
-                1002 => 2,   // PDO::MYSQL_ATTR_SSL_MODE => 2 (REQUIRED)
-                1011 => 0,   // PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => 0 (false)
-                1016 => null // PDO::MYSQL_ATTR_SSL_CA => null (désactive le check CA)
-            ],
+                      1002 => 2, // PDO::MYSQL_ATTR_SSL_MODE => 2 (REQUIRED)
+                      1011 => 0, // PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => 0 (false)
+                      // 1016 est la valeur pour PDO::MYSQL_ATTR_SSL_CA
+                      1016 => base_path('certs/ca.pem'), // Chemin vers votre fichier
+                    ],
         ],
 
         'mariadb' => [
