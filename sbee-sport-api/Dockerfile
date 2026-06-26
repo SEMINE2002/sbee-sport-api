@@ -30,10 +30,8 @@ RUN composer install --optimize-autoloader --ignore-platform-req=ext-zip
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Création d'un script de démarrage pour nettoyer le cache et migrer à chaque lancement
-RUN echo '#!/bin/bash\n\
-php /var/www/html/artisan config:cache\n\
-php /var/www/html/artisan migrate --force\n\
-apache2-foreground' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
+# Remplacez l'ancienne ligne RUN echo par celle-ci :
+RUN echo '#!/bin/bash\nexport MYSQL_ATTR_SSL_MODE=0\nphp /var/www/html/artisan config:cache\nphp /var/www/html/artisan migrate --force\napache2-foreground' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
 
 # Lancement du script
 CMD ["/usr/local/bin/start.sh"]

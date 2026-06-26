@@ -44,12 +44,12 @@ return [
             'transaction_mode' => 'DEFERRED',
         ],
 
-    'mysql' => [
+   'mysql' => [
             'driver' => 'mysql',
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'laravel'),
+            'database' => env('DB_DATABASE', 'sbee_sport'),
             'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
@@ -58,13 +58,10 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
-            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
-            'options' => [
-                      1002 => 2, // PDO::MYSQL_ATTR_SSL_MODE => 2 (REQUIRED)
-                      1011 => 0, // PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => 0 (false)
-                      // 1016 est la valeur pour PDO::MYSQL_ATTR_SSL_CA
-                      1016 => base_path('certs/ca.pem'), // Chemin vers votre fichier
-                    ],
+            'engine' => 'InnoDB',
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
         ],
 
         'mariadb' => [
