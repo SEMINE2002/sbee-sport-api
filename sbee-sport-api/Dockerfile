@@ -1,6 +1,6 @@
 # ════════════════════════════════════════════════════════════
 # Dockerfile — SBEE Sport API (Laravel 11)
-# Autonome : pas besoin de dossier docker/ externe
+# Corrigé : libicu-dev ajouté pour l'extension intl
 # ════════════════════════════════════════════════════════════
 
 FROM php:8.3-fpm
@@ -8,7 +8,7 @@ FROM php:8.3-fpm
 ENV DEBIAN_FRONTEND=noninteractive
 
 # ════════════════════════════════════════════════════════════
-# 1. Dépendances système + librairies PostgreSQL et MySQL
+# 1. Dépendances système
 # ════════════════════════════════════════════════════════════
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
@@ -16,22 +16,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     git \
     supervisor \
-    cron \
     nano \
-    # Images
+    # Images GD
     libpng-dev \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
     libwebp-dev \
     # Zip
     libzip-dev \
-    # XML
+    # XML / MBString
     libxml2-dev \
     libonig-dev \
-    # SSL
+    # SSL / Curl
     libcurl4-openssl-dev \
     libssl-dev \
-    # ✅ PostgreSQL (résout l'erreur libpq-fe.h)
+    # ✅ ICU pour l'extension intl
+    libicu-dev \
+    # ✅ PostgreSQL pour pdo_pgsql
     libpq-dev \
     postgresql-client \
     # MySQL
@@ -46,6 +47,7 @@ RUN docker-php-ext-configure gd \
         --with-freetype \
         --with-jpeg \
         --with-webp \
+    && docker-php-ext-configure intl \
     && docker-php-ext-install -j$(nproc) \
         gd \
         pdo \
@@ -120,7 +122,7 @@ RUN chown -R www-data:www-data /var/www/html \
                storage/framework/views
 
 # ════════════════════════════════════════════════════════════
-# 7. Supervisor (queue workers) — inline sans fichier externe
+# 7. Supervisor — inline
 # ════════════════════════════════════════════════════════════
 RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor
 
@@ -170,41 +172,45 @@ RUN { \
 } > /etc/supervisor/conf.d/sbee.conf
 
 # ════════════════════════════════════════════════════════════
-# 8. Script entrypoint — inline sans fichier externe
+# 8. Entrypoint — inline
 # ════════════════════════════════════════════════════════════
-RUN { \
-    echo '#!/bin/bash'; \
-    echo 'set -e'; \
-    echo 'echo "🚀 Démarrage SBEE Sport API..."'; \
-    echo ''; \
-    echo '# Attente base de données'; \
-    echo 'echo "⏳ Attente de la base de données..."'; \
-    echo 'TRIES=0'; \
-    echo 'until php artisan db:monitor 2>/dev/null || php -r "new PDO('"'"'mysql:host='"'"'.getenv('"'"'DB_HOST'"'"').'"'"';dbname='"'"'.getenv('"'"'DB_DATABASE'"'"'),getenv('"'"'DB_USERNAME'"'"'),getenv('"'"'DB_PASSWORD'"'"'));" 2>/dev/null; do'; \
-    echo '  TRIES=$((TRIES+1))'; \
-    echo '  [ $TRIES -ge 30 ] && echo "❌ DB inaccessible" && exit 1'; \
-    echo '  echo "  Tentative $TRIES/30..."; sleep 2'; \
-    echo 'done'; \
-    echo 'echo "✅ Base de données OK"'; \
-    echo ''; \
-    echo '# Migrations'; \
-    echo 'php artisan migrate --force --no-interaction'; \
-    echo ''; \
-    echo '# Seeder si base vide'; \
-    echo 'COUNT=$(php artisan tinker --execute="echo \App\Models\User::count();" 2>/dev/null | tail -1)'; \
-    echo '[ "$COUNT" = "0" ] && php artisan db:seed --force --no-interaction 2>/dev/null || true'; \
-    echo ''; \
-    echo '# Storage link'; \
-    echo 'php artisan storage:link --force 2>/dev/null || true'; \
-    echo ''; \
-    echo '# Optimisation'; \
-    echo 'php artisan config:cache'; \
-    echo 'php artisan route:cache'; \
-    echo 'php artisan view:cache'; \
-    echo ''; \
-    echo 'echo "✅ API prête ! Lancement Supervisor..."'; \
-    echo 'exec /usr/bin/supervisord -c /etc/supervisor/conf.d/sbee.conf'; \
-} > /usr/local/bin/entrypoint.sh \
+RUN printf '#!/bin/bash\n\
+set -e\n\
+echo "Demarrage SBEE Sport API..."\n\
+\n\
+# Attente DB\n\
+echo "Attente de la base de donnees..."\n\
+TRIES=0\n\
+until php artisan migrate:status > /dev/null 2>&1; do\n\
+  TRIES=$((TRIES+1))\n\
+  [ $TRIES -ge 30 ] && echo "DB inaccessible apres 30 tentatives" && exit 1\n\
+  echo "  Tentative $TRIES/30 - attente 3s..."\n\
+  sleep 3\n\
+done\n\
+echo "Base de donnees connectee"\n\
+\n\
+# Migrations\n\
+php artisan migrate --force --no-interaction\n\
+echo "Migrations terminees"\n\
+\n\
+# Seeder si base vide\n\
+USER_COUNT=$(php artisan tinker --execute="echo \\App\\Models\\User::count();" 2>/dev/null | grep -E "^[0-9]+$" | tail -1)\n\
+if [ "$USER_COUNT" = "0" ] || [ -z "$USER_COUNT" ]; then\n\
+  echo "Initialisation des donnees..."\n\
+  php artisan db:seed --force --no-interaction 2>/dev/null || true\n\
+fi\n\
+\n\
+# Storage link\n\
+php artisan storage:link --force 2>/dev/null || true\n\
+\n\
+# Cache\n\
+php artisan config:cache\n\
+php artisan route:cache\n\
+php artisan view:cache\n\
+\n\
+echo "API prete ! Lancement Supervisor..."\n\
+exec /usr/bin/supervisord -c /etc/supervisor/conf.d/sbee.conf\n\
+' > /usr/local/bin/entrypoint.sh \
 && chmod +x /usr/local/bin/entrypoint.sh
 
 # ════════════════════════════════════════════════════════════
