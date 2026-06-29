@@ -211,27 +211,11 @@ echo "  Connexion PostgreSQL OK !"
 
 # ── Phase 3 : Migrations ──
 echo "[3/4] Migrations..."
-php artisan migrate --force --no-interaction
+#php artisan migrate --force --no-interaction
 echo "  Migrations OK !"
 
-# Seeder si base vide
-USER_COUNT=$(php -r "
-    try {
-        \$pdo = new PDO(
-            'pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_DATABASE') . ';sslmode=require',
-            getenv('DB_USERNAME'),
-            getenv('DB_PASSWORD')
-        );
-        echo \$pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
-    } catch(Exception \$e) { echo 0; }
-" 2>/dev/null)
 
-if [ "$USER_COUNT" = "0" ] || [ -z "$USER_COUNT" ]; then
-    echo "  Base vide - Seeder initial..."
-    php artisan db:seed --force --no-interaction && echo "  Seeder OK" || echo "  Seeder ignore"
-else
-    echo "  Base deja initialisee (${USER_COUNT} utilisateurs)"
-fi
+
 
 # ── Phase 4 : Optimisation Laravel ──
 echo "[4/4] Optimisation Laravel..."

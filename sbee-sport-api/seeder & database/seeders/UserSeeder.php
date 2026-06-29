@@ -66,45 +66,87 @@ class UserSeeder extends Seeder
         );
 
         // ════════════════════════════════════════════
-        // 3. UTILISATEURS (avec Personne liée)
+        // 3. UTILISATEURS
         // ════════════════════════════════════════════
-        // ⚠️ La table "users" n'a pas de colonnes nom/prenoms : elles vivent
-        // sur "personnes". On crée donc d'abord la Personne, puis le User
-        // qui référence cette Personne via personne_id.
-        $staffData = [
-            ['nom' => 'OYENIAN',   'prenoms' => 'Sèmine Akanwo',      'email' => 'admin@sbee.bj',        'role' => 'SUPER_ADMIN',         'section_id' => null],
-            ['nom' => 'AHOUANSOU', 'prenoms' => 'Gilles',             'email' => 'tresorier@sbee.bj',    'role' => 'TRESORIER',           'section_id' => null],
-            ['nom' => 'SAGBO',     'prenoms' => 'Roland',             'email' => 'resp.foot@sbee.bj',    'role' => 'RESPONSABLE_SECTION', 'section_id' => $seniorFoot->id],
-            ['nom' => 'DOSSOU',    'prenoms' => 'Arnaud',             'email' => 'coach.foot@sbee.bj',   'role' => 'COACH',               'section_id' => $seniorFoot->id],
-            ['nom' => 'HOUESSOU',  'prenoms' => 'Parfait',            'email' => 'coach.basket@sbee.bj', 'role' => 'COACH',               'section_id' => $seniorBask->id],
-            ['nom' => 'AGOSSOU',   'prenoms' => 'Théodore',           'email' => 'coach.hand@sbee.bj',   'role' => 'COACH',               'section_id' => $seniorHand->id],
-            ['nom' => 'ALAPINI',   'prenoms' => 'Romain',             'email' => 'medecin@sbee.bj',      'role' => 'MEDECIN',             'section_id' => null],
-            ['nom' => 'SBEE',      'prenoms' => 'Direction Générale', 'email' => 'sponsor@sbee.bj',      'role' => 'SPONSOR',             'section_id' => null],
-        ];
+        // Super Admin
+        User::updateOrCreate(['email' => 'admin@sbee.bj'], [
+            'nom'          => 'OYENIAN',
+            'prenoms'      => 'Sèmine Akanwo',
+            'password'     => $password,
+            'role_systeme' => 'SUPER_ADMIN',
+            'is_actif'     => true,
+            'section_id'   => null,
+        ]);
 
-        $staffUsers = [];
+        // Trésorier
+        User::updateOrCreate(['email' => 'tresorier@sbee.bj'], [
+            'nom'          => 'AHOUANSOU',
+            'prenoms'      => 'Gilles',
+            'password'     => $password,
+            'role_systeme' => 'TRESORIER',
+            'is_actif'     => true,
+            'section_id'   => null,
+        ]);
 
-        foreach ($staffData as $s) {
-            // 1) Fiche Personne (nom, prenoms vivent ici)
-            $personne = Personne::updateOrCreate(
-                ['nom' => $s['nom'], 'prenoms' => $s['prenoms']],
-                ['uuid' => (string) Str::uuid(), 'nationalite' => 'Béninoise']
-            );
+        // Responsable Football
+        User::updateOrCreate(['email' => 'resp.foot@sbee.bj'], [
+            'nom'          => 'SAGBO',
+            'prenoms'      => 'Roland',
+            'password'     => $password,
+            'role_systeme' => 'RESPONSABLE_SECTION',
+            'is_actif'     => true,
+            'section_id'   => $seniorFoot->id,
+        ]);
 
-            // 2) User référence la Personne, et renseigne sa propre colonne "name"
-            $staffUsers[$s['email']] = User::updateOrCreate(['email' => $s['email']], [
-                'name'         => $s['prenoms'] . ' ' . $s['nom'],
-                'personne_id'  => $personne->id,
-                'password'     => $password,
-                'role_systeme' => $s['role'],
-                'is_actif'     => true,
-                'section_id'   => $s['section_id'],
-            ]);
-        }
+        // Coach Football
+        $coachFoot = User::updateOrCreate(['email' => 'coach.foot@sbee.bj'], [
+            'nom'          => 'DOSSOU',
+            'prenoms'      => 'Arnaud',
+            'password'     => $password,
+            'role_systeme' => 'COACH',
+            'is_actif'     => true,
+            'section_id'   => $seniorFoot->id,
+        ]);
 
-        $coachFoot = $staffUsers['coach.foot@sbee.bj'];
-        $coachBask = $staffUsers['coach.basket@sbee.bj'];
-        $coachHand = $staffUsers['coach.hand@sbee.bj'];
+        // Coach Basketball
+        $coachBask = User::updateOrCreate(['email' => 'coach.basket@sbee.bj'], [
+            'nom'          => 'HOUESSOU',
+            'prenoms'      => 'Parfait',
+            'password'     => $password,
+            'role_systeme' => 'COACH',
+            'is_actif'     => true,
+            'section_id'   => $seniorBask->id,
+        ]);
+
+        // Coach Handball
+        $coachHand = User::updateOrCreate(['email' => 'coach.hand@sbee.bj'], [
+            'nom'          => 'AGOSSOU',
+            'prenoms'      => 'Théodore',
+            'password'     => $password,
+            'role_systeme' => 'COACH',
+            'is_actif'     => true,
+            'section_id'   => $seniorHand->id,
+        ]);
+
+        // Médecin
+        User::updateOrCreate(['email' => 'medecin@sbee.bj'], [
+            'nom'          => 'ALAPINI',
+            'prenoms'      => 'Romain',
+            'password'     => $password,
+            'role_systeme' => 'MEDECIN',
+            'is_actif'     => true,
+            'section_id'   => null,
+        ]);
+
+        // Sponsor
+        User::updateOrCreate(['email' => 'sponsor@sbee.bj'], [
+            'nom'          => 'SBEE',
+            'prenoms'      => 'Direction Générale',
+            'password'     => $password,
+            'role_systeme' => 'SPONSOR',
+            'is_actif'     => true,
+            'section_id'   => null,
+        ]);
 
         // ════════════════════════════════════════════
         // 4. SAISON
@@ -203,7 +245,7 @@ class UserSeeder extends Seeder
                     'type_role'                 => 'JOUEUR',
                     'poste_cle'                 => $j['poste'],
                     'numero_maillot'            => $j['maillot'],
-                    'numero_licence'            => 'LIC-SBEE-' . $saison->id . '-' . $j['section']->id . '-' . $j['maillot'],
+                    'numero_licence'            => 'LIC-SBEE-' . $saison->id . '-' . $j['maillot'],
                     'salaire_fixe'              => 0,
                     'prime_signature'           => 0,
                     'mode_paiement'             => 'VIREMENT',
@@ -218,7 +260,37 @@ class UserSeeder extends Seeder
             );
         }
 
-       
+        // ════════════════════════════════════════════
+        // 7. ÉVÉNEMENTS DE DÉMONSTRATION
+        // ════════════════════════════════════════════
+        $evenements = [
+            ['section' => $seniorFoot, 'type' => 'MATCH',        'adversaire' => 'ASPAC FC',        'lieu' => 'Stade René Pleven',   'date' => now()->addDays(7)],
+            ['section' => $seniorFoot, 'type' => 'ENTRAINEMENT',  'adversaire' => null,              'lieu' => 'Terrain SBEE',        'date' => now()->addDays(2)],
+            ['section' => $seniorBask, 'type' => 'MATCH',        'adversaire' => 'Énergie BBC',     'lieu' => 'Hall des Arts',       'date' => now()->addDays(10)],
+            ['section' => $seniorBask, 'type' => 'ENTRAINEMENT',  'adversaire' => null,              'lieu' => 'Centre SBEE',         'date' => now()->addDays(3)],
+            ['section' => $seniorHand, 'type' => 'MATCH',        'adversaire' => 'Flowers CNSS',    'lieu' => "Stade de l'Amitié",   'date' => now()->addDays(14)],
+            ['section' => $seniorHand, 'type' => 'ENTRAINEMENT',  'adversaire' => null,              'lieu' => 'Terrain Hand SBEE',   'date' => now()->addDays(4)],
+        ];
+
+        foreach ($evenements as $e) {
+            Evenement::updateOrCreate(
+                [
+                    'section_id'  => $e['section']->id,
+                    'type'        => $e['type'],
+                    'adversaire'  => $e['adversaire'],
+                ],
+                [
+                    'saison_id'      => $saison->id,
+                    'competition_id' => null,
+                    'date_heure'     => $e['date']->format('Y-m-d H:i:s'),
+                    'lieu'           => $e['lieu'],
+                    'resultat'       => 'EN_ATTENTE',
+                    'statut'         => 'PLANIFIE',
+                    'is_verrouille'  => false,
+                    'observations'   => 'Généré automatiquement.',
+                ]
+            );
+        }
 
         Schema::enableForeignKeyConstraints();
 
