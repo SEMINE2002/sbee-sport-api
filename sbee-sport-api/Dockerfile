@@ -1,39 +1,39 @@
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 # Dockerfile — SBEE Sport API (Laravel 11)
 # Optimisé Render.com + PostgreSQL SSL
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 
 FROM php:8.3-fpm
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 # 1. Dépendances système
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    unzip \
-    git \
-    supervisor \
-    netcat-openbsd \
-    ca-certificates \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    libwebp-dev \
-    libzip-dev \
-    libxml2-dev \
-    libonig-dev \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    libicu-dev \
-    libpq-dev \
+        curl \
+        unzip \
+        git \
+        supervisor \
+        netcat-openbsd \
+        ca-certificates \
+        libpng-dev \
+        libjpeg62-turbo-dev \
+        libfreetype6-dev \
+        libwebp-dev \
+        libzip-dev \
+        libxml2-dev \
+        libonig-dev \
+        libcurl4-openssl-dev \
+        libssl-dev \
+        libicu-dev \
+        libpq-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 # 2. Extensions PHP
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 RUN docker-php-ext-configure gd \
         --with-freetype \
         --with-jpeg \
@@ -56,29 +56,29 @@ RUN docker-php-ext-configure gd \
         opcache \
         exif
 
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 # 3. Configuration PHP
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 RUN { \
-    echo "upload_max_filesize = 50M"; \
-    echo "post_max_size = 50M"; \
-    echo "max_execution_time = 120"; \
-    echo "memory_limit = 256M"; \
-    echo "date.timezone = Africa/Porto-Novo"; \
-} > /usr/local/etc/php/conf.d/laravel.ini \
+        echo "upload_max_filesize = 50M"; \
+        echo "post_max_size = 50M"; \
+        echo "max_execution_time = 120"; \
+        echo "memory_limit = 256M"; \
+        echo "date.timezone = Africa/Porto-Novo"; \
+    } > /usr/local/etc/php/conf.d/laravel.ini \
 && { \
-    echo "opcache.enable=1"; \
-    echo "opcache.memory_consumption=128"; \
-    echo "opcache.max_accelerated_files=10000"; \
-    echo "opcache.revalidate_freq=0"; \
-} > /usr/local/etc/php/conf.d/opcache.ini
+        echo "opcache.enable=1"; \
+        echo "opcache.memory_consumption=128"; \
+        echo "opcache.max_accelerated_files=10000"; \
+        echo "opcache.revalidate_freq=0"; \
+    } > /usr/local/etc/php/conf.d/opcache.ini
 
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 # 4. Composer
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 # 5. Code source
 # ════════════════════════════════════════════════════════════
 WORKDIR /var/www/html
@@ -86,16 +86,16 @@ WORKDIR /var/www/html
 COPY composer.json composer.lock ./
 
 RUN composer install \
-    --no-dev \
-    --no-interaction \
-    --no-scripts \
-    --prefer-dist \
-    --optimize-autoloader \
-    --no-progress
+        --no-dev \
+        --no-interaction \
+        --no-scripts \
+        --prefer-dist \
+        --optimize-autoloader \
+        --no-progress
 
 COPY . .
 
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 # 6. Permissions
 # ════════════════════════════════════════════════════════════
 RUN chown -R www-data:www-data /var/www/html \
@@ -107,7 +107,7 @@ RUN chown -R www-data:www-data /var/www/html \
                storage/framework/sessions \
                storage/framework/views
 
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 # 7. Supervisor
 # ════════════════════════════════════════════════════════════
 RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor && \
@@ -146,16 +146,13 @@ stderr_logfile=/var/www/html/storage/logs/worker-error.log\n\
 user=www-data\n\
 ' > /etc/supervisor/conf.d/sbee.conf
 
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 # 8. Script d'entrée (Entrypoint)
 # ════════════════════════════════════════════════════════════
-# Copier le script depuis le projet vers /usr/local/bin/
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh   # <-- ligne décommentée
 
-# Décommenter cette ligne pour rendre le script exécutable
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-# ════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════
 # 9. Port et démarrage
 # ════════════════════════════════════════════════════════════
 EXPOSE 80
@@ -164,3 +161,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=5 \
     CMD php-fpm -t || exit 1
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# (pas de CMD défini ici – le script d'entrée décide ce qui sera lancé)
