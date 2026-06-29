@@ -146,7 +146,7 @@ stderr_logfile=/var/www/html/storage/logs/worker-error.log\n\
 user=www-data\n\
 ' > /etc/supervisor/conf.d/sbee.conf
 
-RUN chmod +x /usr/local/bin/entrypoint.sh
+#RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # ════════════════════════════════════════════════════════════
 # 9. Port et démarrage
