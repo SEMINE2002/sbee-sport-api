@@ -1,15 +1,15 @@
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 # Dockerfile — SBEE Sport API (Laravel 11)
 # Optimisé pour Render.com + PostgreSQL SSL
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 
 FROM php:8.3-fpm
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 # 1. Dépendances système
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
         unzip \
@@ -32,9 +32,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 # 2. Extensions PHP
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 RUN docker-php-ext-configure gd \
         --with-freetype \
         --with-jpeg \
@@ -57,9 +57,9 @@ RUN docker-php-ext-configure gd \
         opcache \
         exif
 
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 # 3. Configuration PHP
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 RUN { \
         echo "upload_max_filesize = 50M"; \
         echo "post_max_size = 50M"; \
@@ -74,14 +74,14 @@ RUN { \
         echo "opcache.revalidate_freq=0"; \
     } > /usr/local/etc/php/conf.d/opcache.ini
 
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 # 4. Composer
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 # 5. Code source
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 WORKDIR /var/www/html
 
 COPY composer.json composer.lock ./
@@ -95,23 +95,25 @@ RUN composer install \
 
 COPY . .
 
-# ══════════════════════════════════════════════════════════════
-# 6. Permissions & répertoires requis
-# ══════════════════════════════════════════════════════════════
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache \
-    && mkdir -p \
+# ═══════════════════════════════════════════════════════════════
+# 6. Permissions & répertoires requis (CORRIGÉ)
+# ═══════════════════════════════════════════════════════════════
+# CRÉATION DES RÉPERTOIRES NÉCESSAIRES AVANT CHOWN POUR ÉVITER LES PROBLÈMES DE PROPRIÉTÉ
+RUN mkdir -p \
         storage/app/public \
         storage/logs \
         storage/framework/cache \
         storage/framework/sessions \
-        storage/framework/views
+        storage/framework/views \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache
 
-# ══════════════════════════════════════════════════════════════
-# 7. Configuration Supervisor (avec Nginx intégré)
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
+# 7. Configuration Supervisor (avec Nginx intégré) - CORRIGÉ
+# ═══════════════════════════════════════════════════════════════
 RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor && \
+    chown -R www-data:www-data /var/log/supervisor && \
     printf '[supervisord]\n\
 nodaemon=true\n\
 user=www-data\n\
@@ -148,7 +150,7 @@ stdout_logfile=/dev/stdout\n\
 stderr_logfile=/dev/stderr\n\
 ' > /etc/supervisor/conf.d/sbee.conf
 
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 # 8. Configuration Nginx (spécifique Laravel 11)
 # ══════════════════════════════════════════════════════════════
 RUN rm /etc/nginx/sites-enabled/default \
@@ -191,16 +193,16 @@ RUN rm /etc/nginx/sites-enabled/default \
 }' > /etc/nginx/sites-available/laravel \
     && ln -s /etc/nginx/sites-available/laravel /etc/nginx/sites-enabled/
 
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 # 9. Script d'entrée (Entrypoint)
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# ══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════
 # 10. Port, health-check et démarrage
 # ══════════════════════════════════════════════════════════════
-EXPOSE 9000
+EXPOSE 80  # Render mappe son port externe vers le 80 du container (Nginx)
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=5 \
     CMD curl -sf http://localhost/ || exit 1  # Vérifie une vraie réponse HTTP
