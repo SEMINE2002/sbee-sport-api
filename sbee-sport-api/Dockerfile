@@ -1,15 +1,15 @@
-# ═════════════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════
 # Dockerfile — SBEE Sport API (Laravel 11)
-# Optimised for Render.com + PostgreSQL SSL
-# ═════════════════════════════════════════════════════════════
+# Optimisé pour Render.com + PostgreSQL SSL
+# ══════════════════════════════════════════════════════════════
 
 FROM php:8.3-fpm
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# -------------------------------------------------
-# 1️⃣ System dependencies
-# -------------------------------------------------
+# ══════════════════════════════════════════════════════════════
+# 1. Dépendances système
+# ══════════════════════════════════════════════════════════════
 RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
         unzip \
@@ -28,12 +28,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libssl-dev \
         libicu-dev \
         libpq-dev \
+        nginx \  # ← Essentiel : Serveur HTTP pour répondre aux requêtes
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# -------------------------------------------------
-# 2️⃣ PHP extensions
-# -------------------------------------------------
+# ══════════════════════════════════════════════════════════════
+# 2. Extensions PHP
+# ══════════════════════════════════════════════════════════════
 RUN docker-php-ext-configure gd \
         --with-freetype \
         --with-jpeg \
@@ -56,9 +57,9 @@ RUN docker-php-ext-configure gd \
         opcache \
         exif
 
-# -------------------------------------------------
-# 3️⃣ PHP configuration
-# -------------------------------------------------
+# ══════════════════════════════════════════════════════════════
+# 3. Configuration PHP
+# ══════════════════════════════════════════════════════════════
 RUN { \
         echo "upload_max_filesize = 50M"; \
         echo "post_max_size = 50M"; \
@@ -73,14 +74,14 @@ RUN { \
         echo "opcache.revalidate_freq=0"; \
     } > /usr/local/etc/php/conf.d/opcache.ini
 
-# -------------------------------------------------
-# 4️⃣ Composer
-# -------------------------------------------------
+# ══════════════════════════════════════════════════════════════
+# 4. Composer
+# ══════════════════════════════════════════════════════════════
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
-# -------------------------------------------------
-# 5️⃣ Application code
-# -------------------------------------------------
+# ══════════════════════════════════════════════════════════════
+# 5. Code source
+# ══════════════════════════════════════════════════════════════
 WORKDIR /var/www/html
 
 COPY composer.json composer.lock ./
@@ -94,9 +95,9 @@ RUN composer install \
 
 COPY . .
 
-# -------------------------------------------------
-# 6️⃣ Permissions & required directories
-# -------------------------------------------------
+# ══════════════════════════════════════════════════════════════
+# 6. Permissions & répertoires requis
+# ══════════════════════════════════════════════════════════════
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache \
@@ -107,12 +108,13 @@ RUN chown -R www-data:www-data /var/www/html \
         storage/framework/sessions \
         storage/framework/views
 
-# -------------------------------------------------
-# 7️⃣ Supervisor configuration
-# -------------------------------------------------
+# ══════════════════════════════════════════════════════════════
+# 7. Configuration Supervisor (avec Nginx intégré)
+# ══════════════════════════════════════════════════════════════
 RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor && \
     printf '[supervisord]\n\
 nodaemon=true\n\
+user=www-data\n\
 logfile=/var/log/supervisor/supervisord.log\n\
 loglevel=info\n\n\
 [unix_http_server]\n\
@@ -127,9 +129,8 @@ command=php-fpm -F\n\
 autostart=true\n\
 autorestart=true\n\
 stdout_logfile=/dev/stdout\n\
-stdout_logfile_maxbytes=0\n\
 stderr_logfile=/dev/stderr\n\
-stderr_logfile_maxbytes=0\n\n\
+\n\
 [program:laravel-worker]\n\
 command=php /var/www/html/artisan queue:work --sleep=3 --tries=3 --max-time=3600\n\
 directory=/var/www/html\n\
@@ -138,23 +139,71 @@ autorestart=true\n\
 numprocs=1\n\
 stdout_logfile=/var/www/html/storage/logs/worker.log\n\
 stderr_logfile=/var/www/html/storage/logs/worker-error.log\n\
-user=www-data\n\
+user=www-data\n\n\
+[program:nginx]\n\
+command=/usr/sbin/nginx -g \"daemon off;\"\n\
+autostart=true\n\
+autorestart=true\n\
+stdout_logfile=/dev/stdout\n\
+stderr_logfile=/dev/stderr\n\
 ' > /etc/supervisor/conf.d/sbee.conf
 
-# -------------------------------------------------
-# 8️⃣ Entrypoint script
-# -------------------------------------------------
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh   # make it executable
+# ══════════════════════════════════════════════════════════════
+# 8. Configuration Nginx (spécifique Laravel 11)
+# ══════════════════════════════════════════════════════════════
+RUN rm /etc/nginx/sites-enabled/default \
+    && printf 'server {\n\
+    listen 80;\n\
+    listen [::]:80;\n\
+    server_name _;\n\
+    root /var/www/html/public;\n\
+    \n\
+    add_header X-Frame-Options "SAMEORIGIN";\n\
+    add_header X-XSS-Protection "1; mode=block";\n\
+    add_header X-Content-Type-Options "nosniff";\n\
+    \n\
+    index index.php index.html index.htm;\n\
+    \n\
+    charset utf-8;\n\
+    \n\
+    location / {\n\
+        try_files $uri $uri/ /index.php?$query_string;\n\
+    }\n\
+    \n\
+    location = /favicon.ico { access_log off; log_not_found off; }\n\
+    location = /robots.txt  { access_log off; log_not_found off; }\n\
+    \n\
+    error_page 404 /index.php;\n\
+    error_page 500 502 503 504 /500.html;\n\
+    \n\
+    location ~ \\.php$ {\n\
+        fastcgi_split_path_info ^(.+\\.php)(/.+)$;\n\
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;\n\
+        fastcgi_index index.php;\n\
+        include fastcgi_params;\n\
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;\n\
+        fastcgi_param PATH_INFO $fastcgi_path_info;\n\
+    }\n\
+    \n\
+    location ~ /\\.(?!well-known).* {\n\
+        deny all;\n\
+    }\n\
+}' > /etc/nginx/sites-available/laravel \
+    && ln -s /etc/nginx/sites-available/laravel /etc/nginx/sites-enabled/
 
-# -------------------------------------------------
-# 9️⃣ Port, health‑check and start‑up
-# -------------------------------------------------
-# Render maps its external port to 80 inside the container
-EXPOSE 80
+# ══════════════════════════════════════════════════════════════
+# 9. Script d'entrée (Entrypoint)
+# ══════════════════════════════════════════════════════════════
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# ══════════════════════════════════════════════════════════════
+# 10. Port, health-check et démarrage
+# ══════════════════════════════════════════════════════════════
+EXPOSE 80  # Render mappe son port externe vers le 80 du container (Nginx)
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=5 \
-    CMD php-fpm -t || exit 1
+    CMD curl -sf http://localhost/ || exit 1  # Vérifie une vraie réponse HTTP
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-# (no CMD – the entrypoint decides what to run)
+# (Aucun CMD défini – l'entrée décide ce qui est lancé via Supervisor)
