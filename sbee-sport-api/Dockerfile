@@ -1,15 +1,15 @@
 # ═════════════════════════════════════════════════════════════
 # Dockerfile — SBEE Sport API (Laravel 11)
-# Optimisé Render.com + PostgreSQL SSL
+# Optimised for Render.com + PostgreSQL SSL
 # ═════════════════════════════════════════════════════════════
 
 FROM php:8.3-fpm
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# ═════════════════════════════════════════════════════════════
-# 1. Dépendances système
-# ═════════════════════════════════════════════════════════════
+# -------------------------------------------------
+# 1️⃣ System dependencies
+# -------------------------------------------------
 RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
         unzip \
@@ -31,9 +31,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# ═════════════════════════════════════════════════════════════
-# 2. Extensions PHP
-# ═════════════════════════════════════════════════════════════
+# -------------------------------------------------
+# 2️⃣ PHP extensions
+# -------------------------------------------------
 RUN docker-php-ext-configure gd \
         --with-freetype \
         --with-jpeg \
@@ -56,9 +56,9 @@ RUN docker-php-ext-configure gd \
         opcache \
         exif
 
-# ═════════════════════════════════════════════════════════════
-# 3. Configuration PHP
-# ═════════════════════════════════════════════════════════════
+# -------------------------------------------------
+# 3️⃣ PHP configuration
+# -------------------------------------------------
 RUN { \
         echo "upload_max_filesize = 50M"; \
         echo "post_max_size = 50M"; \
@@ -73,18 +73,17 @@ RUN { \
         echo "opcache.revalidate_freq=0"; \
     } > /usr/local/etc/php/conf.d/opcache.ini
 
-# ═════════════════════════════════════════════════════════════
-# 4. Composer
-# ═════════════════════════════════════════════════════════════
+# -------------------------------------------------
+# 4️⃣ Composer
+# -------------------------------------------------
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
-# ═════════════════════════════════════════════════════════════
-# 5. Code source
-# ════════════════════════════════════════════════════════════
+# -------------------------------------------------
+# 5️⃣ Application code
+# -------------------------------------------------
 WORKDIR /var/www/html
 
 COPY composer.json composer.lock ./
-
 RUN composer install \
         --no-dev \
         --no-interaction \
@@ -95,37 +94,34 @@ RUN composer install \
 
 COPY . .
 
-# ═════════════════════════════════════════════════════════════
-# 6. Permissions
-# ════════════════════════════════════════════════════════════
+# -------------------------------------------------
+# 6️⃣ Permissions & required directories
+# -------------------------------------------------
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache \
-    && mkdir -p storage/app/public \
-               storage/logs \
-               storage/framework/cache \
-               storage/framework/sessions \
-               storage/framework/views
+    && mkdir -p \
+        storage/app/public \
+        storage/logs \
+        storage/framework/cache \
+        storage/framework/sessions \
+        storage/framework/views
 
-# ═════════════════════════════════════════════════════════════
-# 7. Supervisor
-# ════════════════════════════════════════════════════════════
+# -------------------------------------------------
+# 7️⃣ Supervisor configuration
+# -------------------------------------------------
 RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor && \
     printf '[supervisord]\n\
-nodaemon=false\n\
+nodaemon=true\n\
 logfile=/var/log/supervisor/supervisord.log\n\
-loglevel=info\n\
-\n\
+loglevel=info\n\n\
 [unix_http_server]\n\
 file=/var/run/supervisor.sock\n\
-chmod=0700\n\
-\n\
+chmod=0700\n\n\
 [supervisorctl]\n\
-serverurl=unix:///var/run/supervisor.sock\n\
-\n\
+serverurl=unix:///var/run/supervisor.sock\n\n\
 [rpcinterface:supervisor]\n\
-supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface\n\
-\n\
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface\n\n\
 [program:php-fpm]\n\
 command=php-fpm -F\n\
 autostart=true\n\
@@ -133,8 +129,7 @@ autorestart=true\n\
 stdout_logfile=/dev/stdout\n\
 stdout_logfile_maxbytes=0\n\
 stderr_logfile=/dev/stderr\n\
-stderr_logfile_maxbytes=0\n\
-\n\
+stderr_logfile_maxbytes=0\n\n\
 [program:laravel-worker]\n\
 command=php /var/www/html/artisan queue:work --sleep=3 --tries=3 --max-time=3600\n\
 directory=/var/www/html\n\
@@ -146,19 +141,19 @@ stderr_logfile=/var/www/html/storage/logs/worker-error.log\n\
 user=www-data\n\
 ' > /etc/supervisor/conf.d/sbee.conf
 
-# ═════════════════════════════════════════════════════════════
-# 8. Script d'entrée (Entrypoint)
-# ════════════════════════════════════════════════════════════
+# -------------------------------------------------
+# 8️⃣ Entrypoint script
+# -------------------------------------------------
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh   # <-- ligne décommentée
+RUN chmod +x /usr/local/bin/entrypoint.sh   # make it executable
 
-# ═════════════════════════════════════════════════════════════
-# 9. Port et démarrage
-# ════════════════════════════════════════════════════════════
-EXPOSE 80
+# -------------------------------------------------
+# 9️⃣ Port, health‑check and start‑up
+# -------------------------------------------------
+EXPOSE 80   # Render maps its external port to 80 inside the container
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=5 \
     CMD php-fpm -t || exit 1
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-# (pas de CMD défini ici – le script d'entrée décide ce qui sera lancé)
+# (no CMD – the entrypoint decides what to run)
