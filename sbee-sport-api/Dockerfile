@@ -146,12 +146,19 @@ stderr_logfile=/var/www/html/storage/logs/worker-error.log\n\
 user=www-data\n\
 ' > /etc/supervisor/conf.d/sbee.conf
 
-#RUN chmod +x /usr/local/bin/entrypoint.sh
+# ════════════════════════════════════════════════════════════
+# 8. Script d'entrée (Entrypoint)
+# ════════════════════════════════════════════════════════════
+# Copier le script depuis le projet vers /usr/local/bin/
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+# Décommenter cette ligne pour rendre le script exécutable
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # ════════════════════════════════════════════════════════════
 # 9. Port et démarrage
 # ════════════════════════════════════════════════════════════
-EXPOSE 9000
+EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=5 \
     CMD php-fpm -t || exit 1
