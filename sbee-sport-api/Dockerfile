@@ -200,7 +200,7 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # ══════════════════════════════════════════════════════════════
 # 10. Port, health-check et démarrage
 # ══════════════════════════════════════════════════════════════
-EXPOSE 80  # Render mappe son port externe vers le 80 du container (Nginx)
+EXPOSE 443  # Render mappe son port externe vers le 80 du container (Nginx)
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=5 \
     CMD curl -sf http://localhost/ || exit 1  # Vérifie une vraie réponse HTTP
