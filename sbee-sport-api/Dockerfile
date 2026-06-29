@@ -150,7 +150,8 @@ RUN chmod +x /usr/local/bin/entrypoint.sh   # make it executable
 # -------------------------------------------------
 # 9️⃣ Port, health‑check and start‑up
 # -------------------------------------------------
-EXPOSE 80   # Render maps its external port to 80 inside the container
+# Render maps its external port to 80 inside the container
+EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=5 \
     CMD php-fpm -t || exit 1
