@@ -3,8 +3,18 @@
 return [
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
     'allowed_methods' => ['*'],
-    'allowed_origins' => ['http://localhost:5173'],
-    'allowed_origins_patterns' => [],
+
+    // Origines autorisées (dev local + front Vercel via env)
+    'allowed_origins' => array_filter([
+        'http://localhost:5173',
+        env('FRONTEND_URL', 'https://sbee-projet-sportif.vercel.app'),
+    ]),
+
+    // Autorise aussi les preview deployments Vercel (sbee-projet-sportif-*.vercel.app)
+    'allowed_origins_patterns' => [
+        '#^https://sbee-projet-sportif.*\.vercel\.app$#',
+    ],
+
     'allowed_headers' => ['*'],
     'exposed_headers' => [],
     'max_age' => 0,

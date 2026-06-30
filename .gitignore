@@ -11,3 +11,4 @@ sbee-sport-api/.env
 .DS_Store
 *.log
 .env.local
+/.idea
