@@ -15,7 +15,6 @@ echo ">> Nginx écoutera sur le port ${PORT}"
 cat > /etc/nginx/sites-available/laravel <<NGINX
 server {
     listen ${PORT};
-    listen [::]:${PORT};
     server_name _;
     root /var/www/html/public;
 

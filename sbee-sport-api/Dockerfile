@@ -130,23 +130,17 @@ command=php-fpm -F\n\
 autostart=true\n\
 autorestart=true\n\
 stdout_logfile=/dev/stdout\n\
+stdout_logfile_maxbytes=0\n\
 stderr_logfile=/dev/stderr\n\
-\n\
-[program:laravel-worker]\n\
-command=php /var/www/html/artisan queue:work --sleep=3 --tries=3 --max-time=3600\n\
-directory=/var/www/html\n\
-autostart=true\n\
-autorestart=true\n\
-numprocs=1\n\
-stdout_logfile=/var/www/html/storage/logs/worker.log\n\
-stderr_logfile=/var/www/html/storage/logs/worker-error.log\n\
-user=www-data\n\n\
+stderr_logfile_maxbytes=0\n\n\
 [program:nginx]\n\
 command=/usr/sbin/nginx -g \"daemon off; pid /tmp/nginx.pid;\"\n\
 autostart=true\n\
 autorestart=true\n\
 stdout_logfile=/dev/stdout\n\
+stdout_logfile_maxbytes=0\n\
 stderr_logfile=/dev/stderr\n\
+stderr_logfile_maxbytes=0\n\
 ' > /etc/supervisor/conf.d/sbee.conf
 
 # ═══════════════════════════════════════════════════════════════
