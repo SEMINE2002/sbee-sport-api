@@ -21,6 +21,8 @@ services:
         value: "false"
       - key: APP_URL
         sync: false            # ex: https://sbee-sport-api.onrender.com
+      - key: FRONTEND_URL
+        value: https://sbee-projet-sportif.vercel.app   # origine CORS autorisée
       # APP_KEY : génère-la en local avec `php artisan key:generate --show`
       # puis colle la valeur (base64:...) dans le dashboard.
       - key: APP_KEY
