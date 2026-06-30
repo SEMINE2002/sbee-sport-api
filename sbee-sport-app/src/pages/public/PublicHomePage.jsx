@@ -2,6 +2,12 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import useAuthStore from '@/store/authStore'
+import {
+  Heart, MessageCircle, Share2, Send, Image, Video,
+  X, ChevronDown, Trophy, Users, Calendar, Star,
+  Play, Plus, LogIn, Loader2, MoreHorizontal,
+  ThumbsUp, Eye, Globe, Lock,
+} from 'lucide-react'
 
 const API_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') ?? 'http://localhost:8000'
 const api = axios.create({ baseURL: `${API_BASE}/api/public` })
@@ -45,9 +51,12 @@ export default function PublicHomePage() {
   const bottomRef   = useRef(null)
   const navigate    = useNavigate()
 
+  // Source de vérité pour l'authentification : le store global (Zustand),
+  // déjà initialisé depuis localStorage (clés sbee_token / sbee_user)
   const { isAuthenticated, user } = useAuthStore()
   const isAdmin = isAuthenticated && user?.role_systeme === 'SUPER_ADMIN'
 
+  // Charge les posts
   const fetchPosts = useCallback(async (p = 1, reset = false) => {
     if (p === 1) setLoading(true); else setLoadingMore(true)
     try {
@@ -62,16 +71,23 @@ export default function PublicHomePage() {
     finally { setLoading(false); setLoadingMore(false) }
   }, [activeFilter])
 
+  // Stats globales
   useEffect(() => {
     api.get('/stats').then(({ data }) => setStats(data)).catch(() => {})
   }, [])
 
+  // Au retour de /login (après un clic sur "Publier"), le store est déjà à
+  // jour de manière synchrone (login() met isAuthenticated/user avant le
+  // navigate). On ouvre donc la modale directement si SUPER_ADMIN.
   useEffect(() => {
     const pendingAction = sessionStorage.getItem('post_login_action')
     if (pendingAction !== 'publish') return
     sessionStorage.removeItem('post_login_action')
 
-    if (!isAuthenticated) return
+    if (!isAuthenticated) {
+      // La connexion a échoué / a été annulée
+      return
+    }
 
     if (user?.role_systeme === 'SUPER_ADMIN') {
       setShowCreateModal(true)
@@ -82,6 +98,7 @@ export default function PublicHomePage() {
 
   useEffect(() => { fetchPosts(1, true) }, [fetchPosts])
 
+  // Infinite scroll
   useEffect(() => {
     observerRef.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting && hasMore && !loadingMore) {
@@ -107,8 +124,10 @@ export default function PublicHomePage() {
 
   function handleNewPost(savedPost) {
     if (editingPost) {
+      // Met à jour le post existant dans la liste
       setPosts(prev => prev.map(p => p.id === savedPost.id ? savedPost : p))
     } else {
+      // Ajoute le nouveau post au début
       setPosts(prev => [savedPost, ...prev])
     }
     setShowCreateModal(false)
@@ -135,6 +154,9 @@ export default function PublicHomePage() {
   }
 
   const handleOpenCreateModal = () => {
+    // Pas connecté : on envoie vers la connexion, en indiquant que l'on doit
+    // revenir sur la page d'accueil (et non /dashboard) après authentification,
+    // pour pouvoir y ouvrir la modale de publication si le compte est admin.
     if (!isAuthenticated) {
       sessionStorage.setItem('post_login_action', 'publish')
       navigate('/login', { state: { from: { pathname: '/' } } })
@@ -151,19 +173,22 @@ export default function PublicHomePage() {
   return (
     <div style={{ minHeight: '10vh', background: '#f5f5f5', fontFamily: 'Poppins, sans-serif' }}>
 
+      {/* ── NAVBAR ── */}
       <nav style={{ position: 'sticky', top: 0, zIndex: 100, background: '#fff', borderBottom: '1px solid #e8e8e8', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
         <div style={{ maxWidth: 1500, margin: '0 auto', padding: '0 20px', height: 100, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          {/* Logo */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <img src="/logo.svg" alt="SBEE" style={{ height: 80 }}
               onError={e => { e.target.style.display = 'none' }} />
           </div>
 
+          {/* Centre — Filtres */}
           <div style={{ display: 'flex', gap: 4, background: '#f5f5f5', borderRadius: 99, padding: 4 }}>
             {[
               { key: 'all',   label: 'Tout' },
-              { key: 'FOOT',  label: 'Football' },
-              { key: 'BASK',  label: 'Basket' },
-              { key: 'HAND',  label: 'Handball' },
+              { key: 'FOOT',  label: '⚽ Football' },
+              { key: 'BASK',  label: '🏀 Basket' },
+              { key: 'HAND',  label: '🤾 Handball' },
             ].map(f => (
               <button key={f.key} onClick={() => setActiveFilter(f.key)}
                 style={{ padding: '10px 18px', borderRadius: 99, border: 'none', fontSize: 12, fontWeight: 500, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', background: activeFilter === f.key ? '#ed1f24' : 'transparent', color: activeFilter === f.key ? '#fff' : '#6b7280', transition: 'all 0.15s' }}>
@@ -172,21 +197,23 @@ export default function PublicHomePage() {
             ))}
           </div>
 
+          {/* Droite — Actions */}
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             {isAdmin && (
               <button onClick={handleOpenCreateModal}
                 style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', border: '1px solid #ed1f24', borderRadius: 8, background: 'transparent', color: '#ed1f24', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'Poppins, sans-serif' }}>
-                Publier
+                <Plus size={15} /> Publier
               </button>
             )}
             <Link to="/login"
               style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: 'none', borderRadius: 8, background: '#ed1f24', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
-              Espace membres
+              <LogIn size={15} /> Espace membres
             </Link>
           </div>
         </div>
       </nav>
 
+      {/* ── HERO BANNER ── */}
       <div style={{ background: 'white', padding: '40px 20px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: 'rgba(237,31,36,0.15)' }} />
         <div style={{ position: 'absolute', bottom: -40, left: -40, width: 150, height: 150, borderRadius: '50%', background: 'rgba(237,31,36,0.1)' }} />
@@ -202,14 +229,16 @@ export default function PublicHomePage() {
             </p>
           </div>
 
+          {/* Stats */}
           <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
             {[
-              { label: 'Matchs joués', val: stats.nb_matchs ?? '—' },
-              { label: 'Victoires',    val: stats.nb_victoires ?? '—' },
-              { label: 'Membres',      val: stats.nb_membres ?? '—' },
-              { label: 'Publications', val: stats.nb_posts ?? '—' },
-            ].map(({ label, val }) => (
+              { icon: '⚽', label: 'Matchs joués', val: stats.nb_matchs ?? '—' },
+              { icon: '🏆', label: 'Victoires',    val: stats.nb_victoires ?? '—' },
+              { icon: '👥', label: 'Membres',      val: stats.nb_membres ?? '—' },
+              { icon: '📸', label: 'Publications', val: stats.nb_posts ?? '—' },
+            ].map(({ icon, label, val }) => (
               <div key={label} style={{ textAlign: 'center' }}>
+                <p style={{ fontSize: 22, margin: 0 }}>{icon}</p>
                 <p style={{ fontSize: 20, fontWeight: 800, color: '#0f0f0f', margin: '2px 0 0', fontFamily: 'Century Gothic, sans-serif' }}>{val}</p>
                 <p style={{ fontSize: 10, color: '#9d7070', margin: 0 }}>{label}</p>
               </div>
@@ -218,30 +247,42 @@ export default function PublicHomePage() {
         </div>
       </div>
 
+      {/* ── CONTENU PRINCIPAL ── */}
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px 20px', display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20, alignItems: 'start' }}>
 
+        {/* ── FEED ── */}
         <div>
+          {/* Bouton créer un post rapide */}
           <div style={{ background: '#fff', border: '1px solid #e8e8e8', borderRadius: 14, padding: '14px 16px', marginBottom: 16, display: 'flex', gap: 10, alignItems: 'center' }}>
             <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', border: '1.5px solid #fecaca', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ed1f24', fontSize: 14, fontWeight: 700, flexShrink: 0 }}>
-              Global
+              <Globe size={16} />
             </div>
             <button onClick={handleOpenCreateModal}
               style={{ flex: 1, padding: '10px 14px', border: '1px solid #e8e8e8', borderRadius: 99, background: '#f9fafb', fontSize: 13, color: '#9ca3af', cursor: 'pointer', fontFamily: 'Poppins, sans-serif', textAlign: 'left' }}>
               Partagez une actualité sportive...
             </button>
+            <button onClick={handleOpenCreateModal} style={{ padding: '8px', border: '1px solid #e8e8e8', borderRadius: 8, background: '#fff', cursor: 'pointer', color: '#ed1f24', display: 'flex' }}>
+              <Image size={18} />
+            </button>
+            <button onClick={handleOpenCreateModal} style={{ padding: '8px', border: '1px solid #e8e8e8', borderRadius: 8, background: '#fff', cursor: 'pointer', color: '#ed1f24', display: 'flex' }}>
+              <Video size={18} />
+            </button>
           </div>
 
+          {/* Liste des posts */}
           {loading ? (
             <div style={{ textAlign: 'center', padding: '40px 0' }}>
+              <Loader2 size={28} style={{ color: '#ed1f24', animation: 'spin 1s linear infinite', margin: '0 auto' }} />
               <p style={{ fontSize: 13, color: '#9ca3af', marginTop: 12 }}>Chargement des actualités...</p>
             </div>
           ) : posts.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px 20px', background: '#fff', borderRadius: 14, border: '1px solid #e8e8e8' }}>
+              <p style={{ fontSize: 32, marginBottom: 12 }}>📢</p>
               <p style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a' }}>Aucune actualité pour l'instant</p>
               <p style={{ fontSize: 13, color: '#9ca3af', marginTop: 6 }}>Soyez le premier à publier une actualité !</p>
               {isAdmin && (
                 <button onClick={handleOpenCreateModal} style={{ marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 20px', border: 'none', borderRadius: 8, background: '#ed1f24', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Poppins, sans-serif' }}>
-                  Publier
+                  <Plus size={15} /> Publier
                 </button>
               )}
             </div>
@@ -258,18 +299,25 @@ export default function PublicHomePage() {
             ))
           )}
 
+          {/* Loader infinite scroll */}
           {loadingMore && (
             <div style={{ textAlign: 'center', padding: '20px 0' }}>
-              <p style={{ fontSize: 13, color: '#ed1f24' }}>Chargement...</p>
+              <Loader2 size={22} style={{ color: '#ed1f24', animation: 'spin 1s linear infinite', margin: '0 auto' }} />
             </div>
           )}
           <div ref={bottomRef} style={{ height: 1 }} />
         </div>
 
+        {/* ── SIDEBAR ── */}
         <div style={{ position: 'sticky', top: 80 }}>
-          <SidebarCard title="Prochains matchs" />
-          <SidebarCard title="Résultats récents" style={{ marginTop: 12 }} />
 
+          {/* Prochains matchs */}
+          <SidebarCard title="🗓 Prochains matchs" />
+
+          {/* Classement */}
+          <SidebarCard title="🏆 Résultats récents" style={{ marginTop: 12 }} />
+
+          {/* À propos */}
           <div style={{ background: '#fff', border: '1px solid #e8e8e8', borderRadius: 14, padding: '16px', marginTop: 12 }}>
             <h3 style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', marginBottom: 10 }}>À propos du club</h3>
             <p style={{ fontSize: 12, color: '#6b7280', lineHeight: 1.6 }}>
@@ -277,21 +325,23 @@ export default function PublicHomePage() {
               Ouvert à tous les employés et leurs familles.
             </p>
             <div style={{ marginTop: 12, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-              {['Football', 'Basket', 'Handball'].map(s => (
+              {['⚽ Football', '🏀 Basket', '🤾 Handball'].map(s => (
                 <span key={s} style={{ fontSize: 11, padding: '4px 10px', borderRadius: 99, background: '#fef2f2', color: '#ed1f24', border: '1px solid #fecaca', fontWeight: 500 }}>{s}</span>
               ))}
             </div>
             <Link to="/login" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 14, padding: '10px', border: 'none', borderRadius: 8, background: '#ed1f24', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
-              Accès membres
+              <LogIn size={14} /> Accès membres
             </Link>
           </div>
 
+          {/* Footer */}
           <p style={{ fontSize: 10, color: '#d1d5db', textAlign: 'center', marginTop: 14 }}>
             © {new Date().getFullYear()} SBEE Sport · Cotonou, Bénin
           </p>
         </div>
       </div>
 
+      {/* ── MODAL CRÉATION / ÉDITION POST ── */}
       {(showCreateModal || editingPost) && (
         <CreatePostModal
           onClose={() => { setShowCreateModal(false); setEditingPost(null); }}
@@ -302,6 +352,7 @@ export default function PublicHomePage() {
       )}
 
       <style>{`
+        @keyframes spin   { from { transform: rotate(0deg); }   to { transform: rotate(360deg); } }
         @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
         @media (max-width: 768px) {
           .home-grid { grid-template-columns: 1fr !important; }
@@ -312,6 +363,9 @@ export default function PublicHomePage() {
   )
 }
 
+// ══════════════════════════════════════════════════════
+//  CARTE POST
+// ══════════════════════════════════════════════════════
 function PostCard({ post, onLike, onDelete, onEdit, isAdmin }) {
   const [showComments, setShowComments] = useState(false)
   const [comments, setComments]         = useState(post.comments ?? [])
@@ -360,6 +414,7 @@ function PostCard({ post, onLike, onDelete, onEdit, isAdmin }) {
   return (
     <div style={{ background: '#fff', border: '1px solid #e8e8e8', borderRadius: 14, marginBottom: 14, overflow: 'hidden', animation: 'fadeIn 0.3s ease' }}>
 
+      {/* Header */}
       <div style={{ padding: '14px 16px 10px', display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{ width: 42, height: 42, borderRadius: '50%', background: '#fef2f2', border: '2px solid #fecaca', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: '#ed1f24', flexShrink: 0 }}>
           {post.auteur?.[0]?.toUpperCase() ?? '?'}
@@ -376,13 +431,14 @@ function PostCard({ post, onLike, onDelete, onEdit, isAdmin }) {
           <p style={{ fontSize: 11, color: '#9ca3af', margin: 0, marginTop: 1 }}>{timeAgo(post.created_at)}</p>
         </div>
         
+        {/* Menu 3 points (Admin uniquement) */}
         {isAdmin && (
           <div style={{ position: 'relative' }}>
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               style={{ padding: '4px', border: 'none', background: 'none', cursor: 'pointer', color: '#9ca3af' }}
             >
-              Option
+              <MoreHorizontal size={18} />
             </button>
             {isMenuOpen && (
               <div style={{ position: 'absolute', top: '100%', right: 0, background: '#fff', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: 8, zIndex: 99, padding: '6px 0', minWidth: 120, border: '1px solid #f3f4f6' }}>
@@ -394,6 +450,7 @@ function PostCard({ post, onLike, onDelete, onEdit, isAdmin }) {
         )}
       </div>
 
+      {/* Texte */}
       {post.contenu && (
         <div style={{ padding: '0 16px 12px' }}>
           <p style={{ fontSize: 14, color: '#1a1a1a', lineHeight: 1.6, margin: 0 }}>{texteAffiche}</p>
@@ -406,10 +463,12 @@ function PostCard({ post, onLike, onDelete, onEdit, isAdmin }) {
         </div>
       )}
 
+      {/* Médias */}
       {post.medias?.length > 0 && (
         <MediaGallery medias={post.medias} />
       )}
 
+      {/* Stats */}
       <div style={{ padding: '8px 16px', display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #f9fafb', borderBottom: '1px solid #f9fafb' }}>
         <span style={{ fontSize: 12, color: '#9ca3af' }}>{post.nb_likes > 0 ? `${fmt(post.nb_likes)} j'aime` : ''}</span>
         <span style={{ fontSize: 12, color: '#9ca3af', cursor: 'pointer' }} onClick={loadComments}>
@@ -417,23 +476,25 @@ function PostCard({ post, onLike, onDelete, onEdit, isAdmin }) {
         </span>
       </div>
 
+      {/* Actions */}
       <div style={{ padding: '4px 8px', display: 'flex', gap: 4 }}>
-        <ActionBtn label="J'aime" active={post.liked} color="#ed1f24"
+        <ActionBtn icon={<ThumbsUp size={16} />} label="J'aime" active={post.liked} color="#ed1f24"
           onClick={() => onLike(post.id, post.liked)} />
-        <ActionBtn label="Commenter" onClick={loadComments} />
-        <ActionBtn label="Partager"
+        <ActionBtn icon={<MessageCircle size={16} />} label="Commenter" onClick={loadComments} />
+        <ActionBtn icon={<Share2 size={16} />} label="Partager"
           onClick={() => navigator.share?.({ title: 'SBEE Sport', text: post.contenu, url: window.location.href })} />
       </div>
 
+      {/* Commentaires */}
       {showComments && (
         <div style={{ padding: '8px 16px 14px', borderTop: '1px solid #f0f0f0', background: '#fafafa' }}>
           {loadingComments ? (
             <div style={{ textAlign: 'center', padding: '12px 0' }}>
-              <p style={{ fontSize: 12 }}>Chargement...</p>
+              <Loader2 size={18} style={{ color: '#ed1f24', animation: 'spin 1s linear infinite', margin: '0 auto' }} />
             </div>
           ) : (
             <div style={{ maxHeight: 300, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 10 }}>
-              {comments.length === 0 && <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', padding: '8px 0' }}>Aucun commentaire.</p>}
+              {comments.length === 0 && <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', padding: '8px 0' }}>Aucun commentaire. Soyez le premier !</p>}
               {comments.map((c, i) => (
                 <div key={c.id ?? i} style={{ display: 'flex', gap: 8 }}>
                   <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#fef2f2', border: '1px solid #fecaca', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: '#ed1f24', flexShrink: 0 }}>
@@ -449,6 +510,7 @@ function PostCard({ post, onLike, onDelete, onEdit, isAdmin }) {
             </div>
           )}
 
+          {/* Formulaire commentaire */}
           <form onSubmit={sendComment} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             <input value={pseudonyme} onChange={e => setPseudonyme(e.target.value)}
               placeholder="Votre prénom (optionnel)"
@@ -459,7 +521,7 @@ function PostCard({ post, onLike, onDelete, onEdit, isAdmin }) {
                 style={{ flex: 1, padding: '8px 12px', border: '1px solid #e8e8e8', borderRadius: 99, fontSize: 13, fontFamily: 'Poppins, sans-serif', outline: 'none', background: '#fff' }} />
               <button type="submit" disabled={!commentText.trim() || sending}
                 style={{ padding: '8px 12px', border: 'none', borderRadius: 99, background: '#ed1f24', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', opacity: !commentText.trim() ? 0.5 : 1 }}>
-                Envoyer
+                {sending ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <Send size={14} />}
               </button>
             </div>
           </form>
@@ -469,22 +531,31 @@ function PostCard({ post, onLike, onDelete, onEdit, isAdmin }) {
   )
 }
 
-function ActionBtn({ label, onClick, active, color = '#6b7280' }) {
+// ── Bouton action ──
+function ActionBtn({ icon, label, onClick, active, color = '#6b7280' }) {
   return (
     <button onClick={onClick}
       style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '8px', border: 'none', background: 'none', color: active ? color : '#6b7280', fontSize: 13, fontWeight: active ? 600 : 400, cursor: 'pointer', borderRadius: 8, fontFamily: 'Poppins, sans-serif', transition: 'background 0.1s' }}
       onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
       onMouseLeave={e => e.currentTarget.style.background = 'none'}>
-      <span className="action-label">{label}</span>
+      {icon} <span className="action-label">{label}</span>
     </button>
   )
 }
 
+// ── Galerie médias ──
 function MediaGallery({ medias }) {
+  const [activeVideo, setActiveVideo] = useState(null)
   const images = medias.filter(m => m.type === 'IMAGE' || m.mime_type?.startsWith('image'))
   const videos = medias.filter(m => m.type === 'VIDEO' || m.mime_type?.startsWith('video'))
 
-  const grid = images.length === 1 ? '1fr' : images.length === 2 ? '1fr 1fr' : images.length >= 3 ? '1fr 1fr 1fr' : '1fr'
+  const grid = images.length === 1
+    ? '1fr'
+    : images.length === 2
+      ? '1fr 1fr'
+      : images.length >= 3
+        ? '1fr 1fr 1fr'
+        : '1fr'
 
   const getMediaUrl = (m) => {
     const rawUrl = m.url ?? m.chemin;
@@ -518,6 +589,7 @@ function MediaGallery({ medias }) {
   )
 }
 
+// ── Sidebar card placeholder ──
 function SidebarCard({ title, style: extraStyle }) {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -532,7 +604,7 @@ function SidebarCard({ title, style: extraStyle }) {
       <h3 style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', marginBottom: 10 }}>{title}</h3>
       {loading ? (
         <div style={{ textAlign: 'center', padding: '12px 0' }}>
-          <p style={{ fontSize: 12 }}>Chargement...</p>
+          <Loader2 size={16} style={{ color: '#ed1f24', animation: 'spin 1s linear infinite', margin: '0 auto' }} />
         </div>
       ) : data.length === 0 ? (
         <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', padding: '8px 0' }}>Aucune donnée disponible</p>
@@ -564,6 +636,9 @@ function SidebarCard({ title, style: extraStyle }) {
   )
 }
 
+// ══════════════════════════════════════════════════════
+//  MODAL CRÉATION / ÉDITION POST
+// ══════════════════════════════════════════════════════
 function CreatePostModal({ onClose, onCreated, postToEdit, isAdmin }) {
   const [contenu, setContenu]       = useState(postToEdit?.contenu ?? '')
   const [auteur, setAuteur]       = useState(postToEdit?.auteur ?? '')
@@ -574,6 +649,7 @@ function CreatePostModal({ onClose, onCreated, postToEdit, isAdmin }) {
   const [error, setError]         = useState('')
   const fileRef = useRef(null)
 
+  // Pré-remplir les médias existants si l'on est en mode édition
   useEffect(() => {
     if (postToEdit?.medias) {
       const existingPreviews = postToEdit.medias.map(m => {
@@ -608,6 +684,8 @@ function CreatePostModal({ onClose, onCreated, postToEdit, isAdmin }) {
     e.preventDefault()
     if (!contenu.trim()) { setError('Le contenu est obligatoire.'); return }
     
+    // Vérification de sécurité frontend Admin (filet de sécurité — la vraie
+    // restriction est imposée par le middleware role:SUPER_ADMIN côté backend Laravel)
     if (!isAdmin) {
       setError('Action non autorisée. Seul un administrateur peut publier.')
       return
@@ -628,6 +706,7 @@ function CreatePostModal({ onClose, onCreated, postToEdit, isAdmin }) {
 
       const url = postToEdit ? `/public/posts/${postToEdit.id}` : '/public/posts'
       
+      // apiAuth ajoute automatiquement le header Authorization (token sbee_token)
       const { data } = await apiAuth.post(url, fd, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
@@ -646,12 +725,13 @@ function CreatePostModal({ onClose, onCreated, postToEdit, isAdmin }) {
       <div style={{ background: '#fff', borderRadius: 16, width: '100%', maxWidth: 520, maxHeight: '90vh', overflow: 'auto', animation: 'fadeIn 0.2s ease' }}
         onClick={e => e.stopPropagation()}>
 
+        {/* Header */}
         <div style={{ padding: '18px 20px', borderBottom: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 style={{ fontSize: 17, fontWeight: 700, color: '#1a1a1a', margin: 0 }}>
-            {postToEdit ? 'Modifier une actualité' : 'Publier une actualité'}
+            {postToEdit ? '✏️ Modifier une actualité' : '📢 Publier une actualité'}
           </h2>
           <button onClick={onClose} style={{ border: 'none', background: '#f5f5f5', borderRadius: '50%', width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-            Fermer
+            <X size={15} />
           </button>
         </div>
 
@@ -663,6 +743,7 @@ function CreatePostModal({ onClose, onCreated, postToEdit, isAdmin }) {
             </div>
           )}
 
+          {/* Auteur */}
           <div style={{ marginBottom: 12 }}>
             <label style={lbl}>Prénom / pseudo de l'auteur</label>
             <input value={auteur} onChange={e => setAuteur(e.target.value)}
@@ -670,14 +751,15 @@ function CreatePostModal({ onClose, onCreated, postToEdit, isAdmin }) {
               style={inp} />
           </div>
 
+          {/* Discipline */}
           <div style={{ marginBottom: 12 }}>
             <label style={lbl}>Section concernée (optionnel)</label>
             <div style={{ display: 'flex', gap: 6 }}>
               {[
                 { key: '', label: 'Général' },
-                { key: 'Football', label: 'Football' },
-                { key: 'Basketball', label: 'Basket' },
-                { key: 'Handball', label: 'Handball' },
+                { key: 'Football', label: '⚽ Football' },
+                { key: 'Basketball', label: '🏀 Basket' },
+                { key: 'Handball', label: '🤾 Handball' },
               ].map(d => (
                 <button key={d.key} type="button" onClick={() => setDiscipline(d.key)}
                   style={{ flex: 1, padding: '7px 4px', border: `1px solid ${discipline === d.key ? '#ed1f24' : '#e5e7eb'}`, borderRadius: 8, background: discipline === d.key ? '#fef2f2' : '#fafafa', fontSize: 11, color: discipline === d.key ? '#ed1f24' : '#6b7280', cursor: 'pointer', fontFamily: 'Poppins, sans-serif', fontWeight: discipline === d.key ? 600 : 400 }}>
@@ -687,22 +769,31 @@ function CreatePostModal({ onClose, onCreated, postToEdit, isAdmin }) {
             </div>
           </div>
 
+          {/* Contenu */}
           <div style={{ marginBottom: 14 }}>
             <label style={lbl}>Actualité *</label>
             <textarea value={contenu} onChange={e => setContenu(e.target.value)} rows={5}
-              placeholder="Partagez une actualité..."
+              placeholder="Partagez une actualité, un résultat, une photo de match..."
               style={{ ...inp, minHeight: 120, resize: 'vertical', lineHeight: 1.6 }} />
+            <p style={{ fontSize: 11, color: '#9ca3af', textAlign: 'right', marginTop: 3 }}>{contenu.length} caractères</p>
           </div>
 
+          {/* Médias */}
           <div style={{ marginBottom: 16 }}>
-            <label style={lbl}>Médias</label>
+            <label style={lbl}>Photos / Vidéos</label>
+
+            {/* Previews */}
             {previews.length > 0 && (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, marginBottom: 10 }}>
                 {previews.map((p, i) => (
                   <div key={i} style={{ position: 'relative', paddingBottom: '100%', borderRadius: 8, overflow: 'hidden', background: '#000' }}>
+                    {p.type === 'VIDEO'
+                      ? <video src={p.url} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                      : <img src={p.url} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                    }
                     <button type="button" onClick={() => removeFile(i)}
-                      style={{ position: 'absolute', top: 4, right: 4, width: 22, height: 22, borderRadius: '50%', background: 'rgba(0,0,0,0.6)', border: 'none', color: '#fff', cursor: 'pointer' }}>
-                      X
+                      style={{ position: 'absolute', top: 4, right: 4, width: 22, height: 22, borderRadius: '50%', background: 'rgba(0,0,0,0.6)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <X size={12} />
                     </button>
                   </div>
                 ))}
@@ -710,13 +801,19 @@ function CreatePostModal({ onClose, onCreated, postToEdit, isAdmin }) {
             )}
 
             <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', border: '2px dashed #e5e7eb', borderRadius: 10, background: '#fafafa', cursor: 'pointer' }}>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <Image size={20} style={{ color: '#ed1f24' }} />
+                <Video size={20} style={{ color: '#ed1f24' }} />
+              </div>
               <div>
                 <p style={{ fontSize: 13, fontWeight: 500, color: '#374151', margin: 0 }}>Ajouter des photos ou vidéos</p>
+                <p style={{ fontSize: 11, color: '#9ca3af', margin: 0 }}>JPG, PNG, MP4, MOV, AVI — max 100 Mo chacun</p>
               </div>
               <input ref={fileRef} type="file" accept="image/*,video/*" multiple onChange={handleFiles} style={{ display: 'none' }} />
             </label>
           </div>
 
+          {/* Actions */}
           <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
             <button type="button" onClick={onClose}
               style={{ padding: '10px 18px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', fontSize: 13, cursor: 'pointer', fontFamily: 'Poppins, sans-serif' }}>
@@ -724,7 +821,8 @@ function CreatePostModal({ onClose, onCreated, postToEdit, isAdmin }) {
             </button>
             <button type="submit" disabled={saving || !contenu.trim()}
               style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '10px 20px', border: 'none', borderRadius: 8, background: '#ed1f24', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', opacity: (saving || !contenu.trim()) ? 0.6 : 1 }}>
-              {saving ? 'En cours...' : (postToEdit ? 'Modifier' : 'Publier')}
+              {saving ? <Loader2 size={15} style={{ animation: 'spin 1s linear infinite' }} /> : <Send size={15} />}
+              {saving ? (postToEdit ? 'Modification...' : 'Publication...') : (postToEdit ? 'Modifier' : 'Publier')}
             </button>
           </div>
         </form>
