@@ -120,10 +120,10 @@ user=www-data\n\
 logfile=/var/log/supervisor/supervisord.log\n\
 loglevel=info\n\n\
 [unix_http_server]\n\
-file=/var/run/supervisor.sock\n\
+file=/tmp/supervisor.sock\n\
 chmod=0700\n\n\
 [supervisorctl]\n\
-serverurl=unix:///var/run/supervisor.sock\n\n\
+serverurl=unix:///tmp/supervisor.sock\n\n\
 [rpcinterface:supervisor]\n\
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface\n\n\
 [program:php-fpm]\n\
