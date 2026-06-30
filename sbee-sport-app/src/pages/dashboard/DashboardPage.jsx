@@ -159,7 +159,6 @@ export default function DashboardPage() {
         <div style={cardStyle}>
           <div style={cardHeaderStyle}>
             <span style={cardTitleStyle}>Effectif Global</span>
-            <div style={iconWrapperStyle}><Users size={20} style={{ color: '#3b82f6' }} /></div>
           </div>
           <div style={cardValueStyle}>{stats?.membres_count ?? 0}</div>
           <p style={cardSubStyle}>Athlètes et personnels</p>
@@ -168,7 +167,6 @@ export default function DashboardPage() {
         <div style={cardStyle}>
           <div style={cardHeaderStyle}>
             <span style={cardTitleStyle}>Evenements</span>
-            <div style={iconWrapperStyle}><Calendar size={20} style={{ color: '#10b981' }} /></div>
           </div>
           <div style={cardValueStyle}>{stats?.evenements_count ?? 0}</div>
           <p style={cardSubStyle}>Activités enregistrées</p>
@@ -177,7 +175,6 @@ export default function DashboardPage() {
         <div style={cardStyle}>
           <div style={cardHeaderStyle}>
             <span style={cardTitleStyle}>Enveloppe Budgetaire</span>
-            <div style={iconWrapperStyle}><Wallet size={20} style={{ color: '#f59e0b' }} /></div>
           </div>
           <div style={cardValueStyle}>{formatFCFA(budgetAlloue)}</div>
           <p style={cardSubStyle}>Cumul des budgets alloués</p>
@@ -186,7 +183,6 @@ export default function DashboardPage() {
         <div style={{ ...cardStyle, borderLeft: `4px solid #10b981` }}>
           <div style={cardHeaderStyle}>
             <span style={cardTitleStyle}>Montant Restant</span>
-            <div style={iconWrapperStyle}><Receipt size={20} style={{ color: '#10b981' }} /></div>
           </div>
           <div style={{ ...cardValueStyle, color: '#10b981' }}>
             {formatFCFA(soldeRestant)}
@@ -224,7 +220,7 @@ export default function DashboardPage() {
               <div style={{ background: '#f8fafc', padding: 14, borderRadius: 12, border: '1px solid #f1f5f9' }}>
                 <span style={{ fontSize: 11, color: '#64748b', fontWeight: 600 }}>Integrite</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, fontSize: 13, fontWeight: 600, color: '#10b981' }}>
-                  <CheckCircle size={14} /> Sommes consolidees
+                   Sommes consolidees
                 </div>
               </div>
             </div>
@@ -234,7 +230,6 @@ export default function DashboardPage() {
         <div style={tableSectionStyle}>
           <div style={sectionHeaderStyle}>
             <h3 style={sectionTitleStyle}>Flux Metiers</h3>
-            <Bell size={16} style={{ color: '#ed1f24' }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={activityRowStyle}><p style={activityTextStyle}><strong>Finances :</strong> Consolidation des budgets de sections</p></div>

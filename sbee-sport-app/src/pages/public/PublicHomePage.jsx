@@ -186,9 +186,9 @@ export default function PublicHomePage() {
           <div style={{ display: 'flex', gap: 4, background: '#f5f5f5', borderRadius: 99, padding: 4 }}>
             {[
               { key: 'all',   label: 'Tout' },
-              { key: 'FOOT',  label: '⚽ Football' },
-              { key: 'BASK',  label: '🏀 Basket' },
-              { key: 'HAND',  label: '🤾 Handball' },
+              { key: 'FOOT',  label: ' Football' },
+              { key: 'BASK',  label: ' Basket' },
+              { key: 'HAND',  label: ' Handball' },
             ].map(f => (
               <button key={f.key} onClick={() => setActiveFilter(f.key)}
                 style={{ padding: '10px 18px', borderRadius: 99, border: 'none', fontSize: 12, fontWeight: 500, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', background: activeFilter === f.key ? '#ed1f24' : 'transparent', color: activeFilter === f.key ? '#fff' : '#6b7280', transition: 'all 0.15s' }}>
@@ -232,10 +232,10 @@ export default function PublicHomePage() {
           {/* Stats */}
           <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
             {[
-              { icon: '⚽', label: 'Matchs joués', val: stats.nb_matchs ?? '—' },
-              { icon: '🏆', label: 'Victoires',    val: stats.nb_victoires ?? '—' },
-              { icon: '👥', label: 'Membres',      val: stats.nb_membres ?? '—' },
-              { icon: '📸', label: 'Publications', val: stats.nb_posts ?? '—' },
+              { icon: '', label: 'Matchs joués', val: stats.nb_matchs ?? '—' },
+              { icon: '', label: 'Victoires',    val: stats.nb_victoires ?? '—' },
+              { icon: '', label: 'Membres',      val: stats.nb_membres ?? '—' },
+              { icon: ' ', label: 'Publications', val: stats.nb_posts ?? '—' },
             ].map(({ icon, label, val }) => (
               <div key={label} style={{ textAlign: 'center' }}>
                 <p style={{ fontSize: 22, margin: 0 }}>{icon}</p>
@@ -277,7 +277,7 @@ export default function PublicHomePage() {
             </div>
           ) : posts.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px 20px', background: '#fff', borderRadius: 14, border: '1px solid #e8e8e8' }}>
-              <p style={{ fontSize: 32, marginBottom: 12 }}>📢</p>
+              <p style={{ fontSize: 32, marginBottom: 12 }}></p>
               <p style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a' }}>Aucune actualité pour l'instant</p>
               <p style={{ fontSize: 13, color: '#9ca3af', marginTop: 6 }}>Soyez le premier à publier une actualité !</p>
               {isAdmin && (
@@ -315,7 +315,7 @@ export default function PublicHomePage() {
           <SidebarCard title="🗓 Prochains matchs" />
 
           {/* Classement */}
-          <SidebarCard title="🏆 Résultats récents" style={{ marginTop: 12 }} />
+          <SidebarCard title=" Résultats récents" style={{ marginTop: 12 }} />
 
           {/* À propos */}
           <div style={{ background: '#fff', border: '1px solid #e8e8e8', borderRadius: 14, padding: '16px', marginTop: 12 }}>
@@ -325,7 +325,7 @@ export default function PublicHomePage() {
               Ouvert à tous les employés et leurs familles.
             </p>
             <div style={{ marginTop: 12, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-              {['⚽ Football', '🏀 Basket', '🤾 Handball'].map(s => (
+              {[' Football', ' Basket', ' Handball'].map(s => (
                 <span key={s} style={{ fontSize: 11, padding: '4px 10px', borderRadius: 99, background: '#fef2f2', color: '#ed1f24', border: '1px solid #fecaca', fontWeight: 500 }}>{s}</span>
               ))}
             </div>
@@ -728,7 +728,7 @@ function CreatePostModal({ onClose, onCreated, postToEdit, isAdmin }) {
         {/* Header */}
         <div style={{ padding: '18px 20px', borderBottom: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 style={{ fontSize: 17, fontWeight: 700, color: '#1a1a1a', margin: 0 }}>
-            {postToEdit ? '✏️ Modifier une actualité' : '📢 Publier une actualité'}
+            {postToEdit ? ' Modifier une actualité' : ' Publier une actualité'}
           </h2>
           <button onClick={onClose} style={{ border: 'none', background: '#f5f5f5', borderRadius: '50%', width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
             <X size={15} />
@@ -757,9 +757,9 @@ function CreatePostModal({ onClose, onCreated, postToEdit, isAdmin }) {
             <div style={{ display: 'flex', gap: 6 }}>
               {[
                 { key: '', label: 'Général' },
-                { key: 'Football', label: '⚽ Football' },
-                { key: 'Basketball', label: '🏀 Basket' },
-                { key: 'Handball', label: '🤾 Handball' },
+                { key: 'Football', label: ' Football' },
+                { key: 'Basketball', label: ' Basket' },
+                { key: 'Handball', label: ' Handball' },
               ].map(d => (
                 <button key={d.key} type="button" onClick={() => setDiscipline(d.key)}
                   style={{ flex: 1, padding: '7px 4px', border: `1px solid ${discipline === d.key ? '#ed1f24' : '#e5e7eb'}`, borderRadius: 8, background: discipline === d.key ? '#fef2f2' : '#fafafa', fontSize: 11, color: discipline === d.key ? '#ed1f24' : '#6b7280', cursor: 'pointer', fontFamily: 'Poppins, sans-serif', fontWeight: discipline === d.key ? 600 : 400 }}>
