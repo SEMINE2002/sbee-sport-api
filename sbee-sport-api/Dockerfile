@@ -116,7 +116,6 @@ RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor && \
     chown -R www-data:www-data /var/log/supervisor && \
     printf '[supervisord]\n\
 nodaemon=true\n\
-user=www-data\n\
 logfile=/var/log/supervisor/supervisord.log\n\
 loglevel=info\n\n\
 [unix_http_server]\n\
