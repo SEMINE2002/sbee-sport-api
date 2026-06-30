@@ -1,0 +1,77 @@
+# ═══════════════════════════════════════════════════════════════
+# Render Blueprint — SBEE Sport API (Laravel 12 + PostgreSQL)
+# Déploiement : Dashboard Render > New > Blueprint > sélectionne ce repo
+# ═══════════════════════════════════════════════════════════════
+services:
+  - type: web
+    name: sbee-sport-api
+    runtime: docker
+    rootDir: sbee-sport-api
+    dockerfilePath: Dockerfile
+    plan: free                 # passe à "starter" pour éviter le cold start
+    region: frankfurt          # plus proche du Bénin que oregon
+    healthCheckPath: /up       # endpoint santé natif Laravel 11/12
+    autoDeploy: true
+    envVars:
+      - key: APP_NAME
+        value: "SBEE Sport API"
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        sync: false            # ex: https://sbee-sport-api.onrender.com
+      # APP_KEY : génère-la en local avec `php artisan key:generate --show`
+      # puis colle la valeur (base64:...) dans le dashboard.
+      - key: APP_KEY
+        sync: false
+      - key: LOG_CHANNEL
+        value: stack
+      - key: LOG_STACK
+        value: single
+      - key: LOG_LEVEL
+        value: error
+      # --- Base de données (injectée depuis la DB Render ci-dessous) ---
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: sbee-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: sbee-postgres
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: sbee-postgres
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: sbee-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: sbee-postgres
+          property: password
+      # --- Drivers (DB par défaut, simple et sans Redis sur le plan free) ---
+      - key: SESSION_DRIVER
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: FILESYSTEM_DISK
+        value: local
+      - key: BROADCAST_CONNECTION
+        value: log
+      # --- Mail (à compléter selon ton fournisseur) ---
+      - key: MAIL_MAILER
+        value: log
+
+databases:
+  - name: sbee-postgres
+    plan: free                 # 1 Go, expire après 90 j sur le plan free
+    region: frankfurt
+    databaseName: sbee
+    user: sbee

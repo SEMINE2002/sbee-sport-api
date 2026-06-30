@@ -143,7 +143,7 @@ stdout_logfile=/var/www/html/storage/logs/worker.log\n\
 stderr_logfile=/var/www/html/storage/logs/worker-error.log\n\
 user=www-data\n\n\
 [program:nginx]\n\
-command=/usr/sbin/nginx -g \"daemon off;\"\n\
+command=/usr/sbin/nginx -g \"daemon off; pid /tmp/nginx.pid;\"\n\
 autostart=true\n\
 autorestart=true\n\
 stdout_logfile=/dev/stdout\n\
@@ -151,47 +151,13 @@ stderr_logfile=/dev/stderr\n\
 ' > /etc/supervisor/conf.d/sbee.conf
 
 # ═══════════════════════════════════════════════════════════════
-# 8. Configuration Nginx (spécifique Laravel 11)
+# 8. Préparation Nginx (la config est générée au runtime par
+#    l'entrypoint pour binder le $PORT dynamique de Render)
 # ══════════════════════════════════════════════════════════════
-RUN rm /etc/nginx/sites-enabled/default \
-    && printf 'server {\n\
-    listen 80;\n\
-    listen [::]:80;\n\
-    server_name _;\n\
-    root /var/www/html/public;\n\
-    \n\
-    add_header X-Frame-Options "SAMEORIGIN";\n\
-    add_header X-XSS-Protection "1; mode=block";\n\
-    add_header X-Content-Type-Options "nosniff";\n\
-    \n\
-    index index.php index.html index.htm;\n\
-    \n\
-    charset utf-8;\n\
-    \n\
-    location / {\n\
-        try_files $uri $uri/ /index.php?$query_string;\n\
-    }\n\
-    \n\
-    location = /favicon.ico { access_log off; log_not_found off; }\n\
-    location = /robots.txt  { access_log off; log_not_found off; }\n\
-    \n\
-    error_page 404 /index.php;\n\
-    error_page 500 502 503 504 /500.html;\n\
-    \n\
-    location ~ \\.php$ {\n\
-        fastcgi_split_path_info ^(.+\\.php)(/.+)$;\n\
-        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;\n\
-        fastcgi_index index.php;\n\
-        include fastcgi_params;\n\
-        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;\n\
-        fastcgi_param PATH_INFO $fastcgi_path_info;\n\
-    }\n\
-    \n\
-    location ~ /\\.(?!well-known).* {\n\
-        deny all;\n\
-    }\n\
-}' > /etc/nginx/sites-available/laravel \
-    && ln -s /etc/nginx/sites-available/laravel /etc/nginx/sites-enabled/
+RUN rm -f /etc/nginx/sites-enabled/default \
+    && ln -sf /etc/nginx/sites-available/laravel /etc/nginx/sites-enabled/laravel \
+    && mkdir -p /var/lib/nginx /var/log/nginx /var/run \
+    && chown -R www-data:www-data /var/lib/nginx /var/log/nginx
 
 # ═══════════════════════════════════════════════════════════════
 # 9. Script d'entrée (Entrypoint)
@@ -202,10 +168,10 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # ═══════════════════════════════════════════════════════════════
 # 10. Port, health-check et démarrage
 # ══════════════════════════════════════════════════════════════
-EXPOSE 9000  # Render mappe son port externe vers le 80 du container (Nginx)
+EXPOSE 10000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=5 \
-    CMD curl -sf http://localhost/ || exit 1  # Vérifie une vraie réponse HTTP
+    CMD curl -sf "http://localhost:${PORT:-10000}/up" || exit 1  # Endpoint santé Laravel
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 # (Aucun CMD défini – l'entrée décide ce qui est lancé via Supervisor)
