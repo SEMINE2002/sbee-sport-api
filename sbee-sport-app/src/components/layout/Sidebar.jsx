@@ -125,7 +125,7 @@ export default function Sidebar({ isOpen, onClose }) {
           className="nav-item nav-danger"
           style={{ width: '100%', border: 'none', background: 'none', cursor: 'pointer' }}
         >
-          <LogOut size={18} />
+           
           <span style={{ fontWeight: '600' }}>Déconnexion</span>
         </button>
       </div>

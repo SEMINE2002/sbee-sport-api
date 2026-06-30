@@ -202,12 +202,12 @@ export default function PublicHomePage() {
             {isAdmin && (
               <button onClick={handleOpenCreateModal}
                 style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px', border: '1px solid #ed1f24', borderRadius: 8, background: 'transparent', color: '#ed1f24', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'Poppins, sans-serif' }}>
-                <Plus size={15} /> Publier
+                 Publier
               </button>
             )}
             <Link to="/login"
               style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: 'none', borderRadius: 8, background: '#ed1f24', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
-              <LogIn size={15} /> Espace membres
+              Espace membres
             </Link>
           </div>
         </div>
@@ -255,18 +255,12 @@ export default function PublicHomePage() {
           {/* Bouton créer un post rapide */}
           <div style={{ background: '#fff', border: '1px solid #e8e8e8', borderRadius: 14, padding: '14px 16px', marginBottom: 16, display: 'flex', gap: 10, alignItems: 'center' }}>
             <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', border: '1.5px solid #fecaca', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ed1f24', fontSize: 14, fontWeight: 700, flexShrink: 0 }}>
-              <Globe size={16} />
             </div>
             <button onClick={handleOpenCreateModal}
               style={{ flex: 1, padding: '10px 14px', border: '1px solid #e8e8e8', borderRadius: 99, background: '#f9fafb', fontSize: 13, color: '#9ca3af', cursor: 'pointer', fontFamily: 'Poppins, sans-serif', textAlign: 'left' }}>
               Partagez une actualité sportive...
             </button>
-            <button onClick={handleOpenCreateModal} style={{ padding: '8px', border: '1px solid #e8e8e8', borderRadius: 8, background: '#fff', cursor: 'pointer', color: '#ed1f24', display: 'flex' }}>
-              <Image size={18} />
-            </button>
-            <button onClick={handleOpenCreateModal} style={{ padding: '8px', border: '1px solid #e8e8e8', borderRadius: 8, background: '#fff', cursor: 'pointer', color: '#ed1f24', display: 'flex' }}>
-              <Video size={18} />
-            </button>
+           
           </div>
 
           {/* Liste des posts */}
@@ -282,7 +276,7 @@ export default function PublicHomePage() {
               <p style={{ fontSize: 13, color: '#9ca3af', marginTop: 6 }}>Soyez le premier à publier une actualité !</p>
               {isAdmin && (
                 <button onClick={handleOpenCreateModal} style={{ marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 20px', border: 'none', borderRadius: 8, background: '#ed1f24', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Poppins, sans-serif' }}>
-                  <Plus size={15} /> Publier
+                   Publier
                 </button>
               )}
             </div>
@@ -330,7 +324,7 @@ export default function PublicHomePage() {
               ))}
             </div>
             <Link to="/login" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 14, padding: '10px', border: 'none', borderRadius: 8, background: '#ed1f24', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
-              <LogIn size={14} /> Accès membres
+              Accès membres
             </Link>
           </div>
 

@@ -49,7 +49,7 @@ export default function LoginPage() {
         <div className="input-group">
           <label htmlFor="email">Email Professionnel</label>
           <div className="input-wrapper">
-            <Mail className="field-icon" size={18} />
+            
             <input
               id="email"
               type="email"
@@ -70,7 +70,7 @@ export default function LoginPage() {
             </Link>
           </div>
           <div className="input-wrapper">
-            <Lock className="field-icon" size={18} />
+           
             <input
               id="password"
               type={showPass ? 'text' : 'password'}
@@ -96,7 +96,7 @@ export default function LoginPage() {
           ) : (
             <>
              Se connecter
-              <ArrowRight size={18} />
+             
             </>
           )}
         </button>

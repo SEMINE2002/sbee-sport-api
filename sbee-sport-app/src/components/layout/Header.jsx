@@ -47,10 +47,10 @@ export default function Header({ onMenuClick }) {
           {isOpen && (
             <div className="profile-dropdown">
               <Link to="/profil" className="dropdown-item">
-                <User size={16} /> Mon Profil
+                 Mon Profil
               </Link>
               <button onClick={handleLogout} className="dropdown-item text-danger">
-                <LogOut size={16} /> Déconnexion
+                 Déconnexion
               </button>
             </div>
           )}
