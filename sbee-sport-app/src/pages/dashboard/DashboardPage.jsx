@@ -104,7 +104,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* ── CONDITION COMPOSANT : N'AFFICHES QUE SI SUPER_ADMIN OU TRESORIER ── */}
       {canSeeReports && (
         <div style={reportBannerStyle}>
           <div style={reportLeftBlockStyle}>
@@ -112,17 +111,16 @@ export default function DashboardPage() {
               <Download size={20} style={{ color: '#ed1f24' }} />
             </div>
             <div>
-              <h3 style={reportTitleStyle}>Rapports d'activités & Bilans</h3>
+              <h3 style={reportTitleStyle}>Rapports d'activités et Bilans</h3>
               <p style={reportSubtitleStyle}>
                 {isSuperAdmin 
-                  ? "Génération des bilans sportifs complets (PDF) et comptabilités multi-onglets (Excel)." 
+                  ? "Génération des bilans sportifs complets et comptabilités multi-onglets." 
                   : "Accès restreint au suivi budgétaire général et livre des comptes."}
               </p>
             </div>
           </div>
 
           <div style={actionsContainerStyle}>
-            {/* BOUTON EXPORT PDF : Réservé EXCLUSIVEMENT au SUPER_ADMIN */}
             {isSuperAdmin && (
               <button
                 onClick={() => handleDownloadReport('pdf')}
@@ -135,11 +133,10 @@ export default function DashboardPage() {
                 }}
               >
                 {loadingPdf ? <Loader2 size={15} className="animate-spin" /> : <FileText size={15} />}
-                <span>{loadingPdf ? 'Génération PDF...' : 'Bilan Général (PDF)'}</span>
+                <span>{loadingPdf ? 'Génération PDF...' : 'Bilan Général'}</span>
               </button>
             )}
 
-            {/* BOUTON EXPORT EXCEL : Accessible au SUPER_ADMIN et au TRESORIER */}
             <button
               onClick={() => handleDownloadReport('excel')}
               disabled={loadingPdf || loadingExcel}
@@ -151,7 +148,7 @@ export default function DashboardPage() {
               }}
             >
               {loadingExcel ? <Loader2 size={15} className="animate-spin" /> : <FileSpreadsheet size={15} />}
-              <span>{loadingExcel ? 'Livre de Caisse (Excel)...' : 'Exporter le Budget (Excel)'}</span>
+              <span>{loadingExcel ? 'Livre de Caisse...' : 'Exporter le Budget'}</span>
             </button>
           </div>
         </div>
@@ -170,7 +167,7 @@ export default function DashboardPage() {
 
         <div style={cardStyle}>
           <div style={cardHeaderStyle}>
-            <span style={cardTitleStyle}>Événements</span>
+            <span style={cardTitleStyle}>Evenements</span>
             <div style={iconWrapperStyle}><Calendar size={20} style={{ color: '#10b981' }} /></div>
           </div>
           <div style={cardValueStyle}>{stats?.evenements_count ?? 0}</div>
@@ -179,7 +176,7 @@ export default function DashboardPage() {
 
         <div style={cardStyle}>
           <div style={cardHeaderStyle}>
-            <span style={cardTitleStyle}>Enveloppe Budgétaire</span>
+            <span style={cardTitleStyle}>Enveloppe Budgetaire</span>
             <div style={iconWrapperStyle}><Wallet size={20} style={{ color: '#f59e0b' }} /></div>
           </div>
           <div style={cardValueStyle}>{formatFCFA(budgetAlloue)}</div>
@@ -201,14 +198,14 @@ export default function DashboardPage() {
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24, marginTop: 24 }}>
         <div style={tableSectionStyle}>
           <div style={sectionHeaderStyle}>
-            <h3 style={sectionTitleStyle}>Suivi de Consommation Budgétaire</h3>
+            <h3 style={sectionTitleStyle}>Suivi de Consommation Budgetaire</h3>
             <TrendingUp size={16} style={{ color: '#64748b' }} />
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 13, fontWeight: 600 }}>
-                <span style={{ color: '#475569' }}>Dépenses Effectuées</span>
+                <span style={{ color: '#475569' }}>Depenses Effectuees</span>
                 <span style={{ color: '#ed1f24' }}>{formatFCFA(depensesEffectuees)}</span>
               </div>
               <div style={{ width: '100%', height: 12, background: '#f1f5f9', borderRadius: 6, overflow: 'hidden' }}>
@@ -221,13 +218,13 @@ export default function DashboardPage() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div style={{ background: '#f8fafc', padding: 14, borderRadius: 12, border: '1px solid #f1f5f9' }}>
-                <span style={{ fontSize: 11, color: '#64748b', fontWeight: 600 }}>Règle de gestion</span>
-                <p style={{ fontSize: 12, color: '#1e293b', margin: '4px 0 0 0', fontWeight: 500 }}>RG-FIN-01 : Mis à jour à chaque transaction validée</p>
+                <span style={{ fontSize: 11, color: '#64748b', fontWeight: 600 }}>Regle de gestion</span>
+                <p style={{ fontSize: 12, color: '#1e293b', margin: '4px 0 0 0', fontWeight: 500 }}>RG-FIN-01 : Mis a jour a chaque transaction validee</p>
               </div>
               <div style={{ background: '#f8fafc', padding: 14, borderRadius: 12, border: '1px solid #f1f5f9' }}>
-                <span style={{ fontSize: 11, color: '#64748b', fontWeight: 600 }}>Intégrité</span>
+                <span style={{ fontSize: 11, color: '#64748b', fontWeight: 600 }}>Integrite</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, fontSize: 13, fontWeight: 600, color: '#10b981' }}>
-                  <CheckCircle size={14} /> Sommes consolidées
+                  <CheckCircle size={14} /> Sommes consolidees
                 </div>
               </div>
             </div>
@@ -236,12 +233,12 @@ export default function DashboardPage() {
 
         <div style={tableSectionStyle}>
           <div style={sectionHeaderStyle}>
-            <h3 style={sectionTitleStyle}>Flux Métiers</h3>
+            <h3 style={sectionTitleStyle}>Flux Metiers</h3>
             <Bell size={16} style={{ color: '#ed1f24' }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={activityRowStyle}><p style={activityTextStyle}><strong>Finances :</strong> Consolidation des budgets de sections</p></div>
-            <div style={activityRowStyle}><p style={activityTextStyle}><strong>Supervision :</strong> Droits d'accès globaux activés</p></div>
+            <div style={activityRowStyle}><p style={activityTextStyle}><strong>Supervision :</strong> Droits d'acces globaux actives</p></div>
           </div>
         </div>
 

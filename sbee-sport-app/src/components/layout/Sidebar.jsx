@@ -2,60 +2,76 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Users, FileText, Calendar,
   Wallet, Receipt, Package, Truck, LogOut, Home,
-  Layers, History, Activity, Award, CheckCircle, TrendingUp,
-  BarChart3
+  Layers, History, Activity, Award, CheckCircle, BarChart3, Stethoscope
 } from 'lucide-react'
 import useAuthStore from '@/store/authStore'
 
-// ── CONFIGURATION DES MENUS PAR RÔLE ──
+// ── CONFIGURATION COMPLÈTE DES MENUS PAR RÔLE ──
 const MENUS = {
   SUPER_ADMIN: [
     { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
     { section: 'Ressources Humaines', items: [
-      { to: '/personnes', icon: Users,    label: 'Gestion Joueurs' },
-      { to: '/contrats',  icon: FileText,  label: 'Contrats' },
+      { to: '/personnes', icon: Users, label: 'Gestion Joueurs' },
+      { to: '/contrats', icon: FileText, label: 'Contrats' },
     ]},
-    { section: 'Structure du Club', items: [
-      { to: '/discipline', icon: Layers,  label: 'Disciplines & Sections' },
-      { to: '/saisons',    icon: History, label: 'Saisons' },
+    { section: 'Structure', items: [
+      { to: '/discipline', icon: Layers, label: 'Disciplines & Sections' },
+      { to: '/saisons', icon: History, label: 'Saisons' },
     ]},
-    { section: 'Activité Sportive', items: [{ to: '/evenements', icon: Calendar, label: 'Calendrier' }] },
+    { section: 'Activité', items: [{ to: '/evenements', icon: Calendar, label: 'Calendrier' }] },
     { section: 'Finance', items: [
-      { to: '/budgets',      icon: Wallet,  label: 'Budgets' },
+      { to: '/budgets', icon: Wallet, label: 'Budgets' },
       { to: '/transactions', icon: Receipt, label: 'Transactions' },
     ]},
     { section: 'Inventaire', items: [
-      { to: '/stocks',    icon: Package, label: 'Stocks' },
-      { to: '/dotations', icon: Truck,   label: 'Dotations' },
+      { to: '/stocks', icon: Package, label: 'Stocks' },
+      { to: '/dotations', icon: Truck, label: 'Dotations' },
     ]},
-    { section: 'Pilotage', items: [
-      { to: '/rapports', icon: BarChart3, label: 'Rapports & Pilotage' },
-    ]},
+    { section: 'Pilotage', items: [{ to: '/rapports', icon: BarChart3, label: 'Rapports' }] },
   ],
   TRESORIER: [
     { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
-    { section: 'Suivi Financier', items: [
-      { to: '/budgets',      icon: Wallet,  label: 'Budgets Sections' },
-      { to: '/transactions', icon: Receipt, label: 'Validation Transactions' },
+    { section: 'Finances', items: [
+      { to: '/budgets', icon: Wallet, label: 'Budgets' },
+      { to: '/transactions', icon: Receipt, label: 'Transactions' },
     ]},
-    { section: 'Archives', items: [
-      { to: '/saisons',    icon: History, label: 'Historique Saisons' },
-    ]},
-    { section: 'Pilotage', items: [
-      { to: '/rapports', icon: BarChart3, label: 'Rapports & Pilotage' },
-    ]},
+    { section: 'Pilotage', items: [{ to: '/rapports', icon: BarChart3, label: 'Rapports Financiers' }] },
   ],
-  // ... (Autres rôles identiques à votre configuration initiale)
   RESPONSABLE_SECTION: [
     { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
-    { section: 'Ma Section Sportive', items: [
-      { to: '/personnes', icon: Users,    label: 'Effectif Joueurs' },
-      { to: '/contrats',  icon: FileText,  label: 'Contrats Section' },
+    { section: 'Ma Section', items: [
+      { to: '/personnes', icon: Users, label: 'Mon Effectif' },
+      { to: '/contrats', icon: FileText, label: 'Contrats Section' },
+      { to: '/evenements', icon: Calendar, label: 'Matchs & Entraînements' },
     ]},
-    { section: 'Planification', items: [{ to: '/evenements', icon: Calendar, label: 'Matchs & Entraînements' }] },
-    { section: 'Comptabilité', items: [
-      { to: '/budgets',      icon: Wallet,  label: 'Mon Budget Alloué' },
-      { to: '/transactions', icon: Receipt, label: 'Demandes de Fonds' },
+  ],
+  COACH: [
+    { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
+    { section: 'Suivi Sportif', items: [
+      { to: '/presences', icon: CheckCircle, label: 'Présences' },
+      { to: '/performances', icon: Activity, label: 'Performances' },
+      { to: '/sanctions', icon: Award, label: 'Sanctions' },
+      { to: '/evenements', icon: Calendar, label: 'Calendrier' },
+    ]},
+  ],
+  MEDECIN: [
+    { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
+    { section: 'Santé', items: [
+      { to: '/medical/dossiers', icon: Stethoscope, label: 'Dossiers Médicaux' },
+      { to: '/medical/suivi', icon: Activity, label: 'Consultations' },
+    ]}
+  ],
+  JOUEUR: [
+    { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
+    { section: 'Personnel', items: [
+      { to: '/mon-planning', icon: Calendar, label: 'Mon Planning' },
+      { to: '/mes-infos', icon: FileText, label: 'Mes Informations' }
+    ]}
+  ],
+  SPONSOR: [
+    { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
+    { section: 'Consultation', items: [
+      { to: '/rapports', icon: BarChart3, label: 'Tableau de bord Global' }
     ]}
   ]
 }
@@ -64,46 +80,23 @@ export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()
   
-  const role = user?.role_systeme ?? 'SUPER_ADMIN'
-  const menus = MENUS[role] || MENUS.SUPER_ADMIN
+  // Sécurité : Rôle par défaut 'JOUEUR' si aucun rôle trouvé
+  const role = user?.role_systeme ?? 'JOUEUR'
+  const menus = MENUS[role] || MENUS.JOUEUR
 
   return (
     <aside className={`sidebar-aside ${isOpen ? 'sidebar-open' : ''}`} style={{
-      position: 'fixed', top: 0, left: 0,
-      width: 250, height: '100vh',
-      background: '#fff',
-      borderRight: '1px solid #e8e8e8',
-      display: 'flex', flexDirection: 'column',
-      zIndex: 40,
-      transition: 'transform 0.25s ease',
-      fontFamily: '"Poppins", sans-serif',
+      position: 'fixed', top: 0, left: 0, width: 250, height: '100vh',
+      background: '#fff', borderRight: '1px solid #e8e8e8',
+      display: 'flex', flexDirection: 'column', zIndex: 40,
+      transition: 'transform 0.25s ease', fontFamily: '"Poppins", sans-serif',
       overflowX: 'hidden'
     }}>
 
-      {/* 1. LOGO SBEE (Corrigé pour éviter le débordement) */}
-      <div style={{ 
-        padding: '20px', 
-        borderBottom: '1px solid #f5f5f5', 
-        textAlign: 'center',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        overflow: 'hidden'
-      }}>
-        <img 
-          src="/logo.svg" 
-          alt="SBEE" 
-          style={{ 
-            height: '60px',
-            width: '100%',
-            maxWidth: '180px',
-            objectFit: 'contain',
-            display: 'block' 
-          }} 
-        />
+      <div style={{ padding: '20px', borderBottom: '1px solid #f5f5f5', textAlign: 'center' }}>
+        <img src="/logo.svg" alt="SBEE" style={{ height: '60px', width: '100%', maxWidth: '180px', objectFit: 'contain' }} />
       </div>
 
-      {/* 2. NAVIGATION DYNAMIQUE */}
       <nav style={{ flex: 1, overflowY: 'auto', padding: '10px 0' }}>
         {menus.map((group, gi) => (
           <div key={gi}>
@@ -126,22 +119,11 @@ export default function Sidebar({ isOpen, onClose }) {
         ))}
       </nav>
 
-      {/* 3. BAS DE SIDEBAR */}
-      <div style={{ borderTop: '1px solid #f0f0f0', background: '#fcfcfc' }}>
-        <NavLink
-          to="/"
-          onClick={onClose}
-          className="nav-item"
-          style={{ margin: '8px 8px 0', borderRadius: '6px' }}
-        >
-          <Home size={18} strokeWidth={1.8} />
-          <span>Retour à l'accueil</span>
-        </NavLink>
-
+      <div style={{ borderTop: '1px solid #f0f0f0', background: '#fcfcfc', paddingBottom: '10px' }}>
         <button 
           onClick={async () => { await logout(); navigate('/login'); }} 
           className="nav-item nav-danger"
-          style={{ width: 'calc(100% - 16px)', margin: '8px', border: 'none', background: 'none', cursor: 'pointer', borderRadius: '6px' }}
+          style={{ width: '100%', border: 'none', background: 'none', cursor: 'pointer' }}
         >
           <LogOut size={18} />
           <span style={{ fontWeight: '600' }}>Déconnexion</span>
@@ -150,7 +132,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
       <style>{`
         .section-title { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 15px 20px 5px; letter-spacing: 0.5px; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; color: #4b5563; text-decoration: none; font-size: 13.5px; transition: all 0.2s ease; border-left: 3px solid transparent; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #4b5563; text-decoration: none; font-size: 13.5px; transition: all 0.2s ease; border-left: 3px solid transparent; }
         .nav-item:hover { background: #f9fafb; color: #ed1f24; }
         .nav-active { background: #fef2f2 !important; color: #ed1f24 !important; font-weight: 600; border-left: 3px solid #ed1f24 !important; }
         .nav-danger { color: #dc2626 !important; }
