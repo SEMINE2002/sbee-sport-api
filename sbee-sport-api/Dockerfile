@@ -14,8 +14,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
         unzip \
         git \
-        supervisor \
-        netcat-openbsd \
         ca-certificates \
         libpng-dev \
         libjpeg62-turbo-dev \
@@ -110,47 +108,16 @@ RUN mkdir -p \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
 # ═══════════════════════════════════════════════════════════════
-# 7. Configuration Supervisor (avec Nginx intégré) - CORRIGÉ
-# ═══════════════════════════════════════════════════════════════
-RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor && \
-    chown -R www-data:www-data /var/log/supervisor && \
-    printf '[supervisord]\n\
-nodaemon=true\n\
-logfile=/var/log/supervisor/supervisord.log\n\
-loglevel=info\n\n\
-[unix_http_server]\n\
-file=/tmp/supervisor.sock\n\
-chmod=0700\n\n\
-[supervisorctl]\n\
-serverurl=unix:///tmp/supervisor.sock\n\n\
-[rpcinterface:supervisor]\n\
-supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface\n\n\
-[program:php-fpm]\n\
-command=php-fpm -F\n\
-autostart=true\n\
-autorestart=true\n\
-stdout_logfile=/dev/stdout\n\
-stdout_logfile_maxbytes=0\n\
-stderr_logfile=/dev/stderr\n\
-stderr_logfile_maxbytes=0\n\n\
-[program:nginx]\n\
-command=/usr/sbin/nginx -g \"daemon off; pid /tmp/nginx.pid;\"\n\
-autostart=true\n\
-autorestart=true\n\
-stdout_logfile=/dev/stdout\n\
-stdout_logfile_maxbytes=0\n\
-stderr_logfile=/dev/stderr\n\
-stderr_logfile_maxbytes=0\n\
-' > /etc/supervisor/conf.d/sbee.conf
-
-# ═══════════════════════════════════════════════════════════════
-# 8. Préparation Nginx (la config est générée au runtime par
+# 7. Préparation Nginx (la config est générée au runtime par
 #    l'entrypoint pour binder le $PORT dynamique de Render)
 # ══════════════════════════════════════════════════════════════
 RUN rm -f /etc/nginx/sites-enabled/default \
     && ln -sf /etc/nginx/sites-available/laravel /etc/nginx/sites-enabled/laravel \
     && mkdir -p /var/lib/nginx /var/log/nginx /var/run \
-    && chown -R www-data:www-data /var/lib/nginx /var/log/nginx
+    && chown -R www-data:www-data /var/lib/nginx /var/log/nginx \
+    # Logs nginx vers la sortie standard (visibles dans Render)
+    && ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
 
 # ═══════════════════════════════════════════════════════════════
 # 9. Script d'entrée (Entrypoint)

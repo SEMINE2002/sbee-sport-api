@@ -61,6 +61,8 @@ php artisan route:cache || true
 php artisan view:cache
 
 # -------------------------------------------------
-# Lancement de Supervisor (foreground) – devient PID 1
+# Démarrage des process : php-fpm en arrière-plan,
+# nginx au premier plan (devient PID 1)
 # -------------------------------------------------
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/sbee.conf
+php-fpm -D                       # démarre php-fpm (daemon) sur 127.0.0.1:9000
+exec nginx -g 'daemon off;'      # nginx au premier plan = process principal
