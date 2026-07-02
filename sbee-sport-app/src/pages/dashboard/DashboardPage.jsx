@@ -99,7 +99,6 @@ export default function DashboardPage() {
           <p style={subtitleStyle}>Suivi budgétaire et logistique en temps réel.</p>
         </div>
         <div style={badgeRoleStyle}>
-          <Shield size={14} style={{ color: '#ed1f24' }} />
           <span>{currentRole}</span>
         </div>
       </div>
@@ -233,7 +232,6 @@ export default function DashboardPage() {
         <div style={tableSectionStyle}>
           <div style={sectionHeaderStyle}>
             <h3 style={sectionTitleStyle}>Flux Métiers</h3>
-            <Bell size={16} style={{ color: '#ed1f24' }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={activityRowStyle}><p style={activityTextStyle}><strong>Finances :</strong> Consolidation des budgets de sections</p></div>
