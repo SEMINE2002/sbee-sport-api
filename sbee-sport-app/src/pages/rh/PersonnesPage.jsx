@@ -500,14 +500,14 @@ export default function PersonnesPage() {
 
                       {ficheData.allergies && (
                         <div style={{ marginTop: 10, padding: '12px 14px', background: '#fffbeb', borderRadius: 8, border: '1px solid #fde68a' }}>
-                          <p style={{ fontSize: 10, color: '#d97706', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}>⚠ Allergies</p>
+                          <p style={{ fontSize: 10, color: '#d97706', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}> Allergies</p>
                           <p style={{ fontSize: 13, color: '#92400e' }}>{ficheData.allergies}</p>
                         </div>
                       )}
 
                       {ficheData.antecedents_medicaux && (
                         <div style={{ marginTop: 10, padding: '12px 14px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca' }}>
-                          <p style={{ fontSize: 10, color: '#dc2626', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}>🏥 Antécédents médicaux</p>
+                          <p style={{ fontSize: 10, color: '#dc2626', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}> Antécédents médicaux</p>
                           <p style={{ fontSize: 13, color: '#7f1d1d', lineHeight: 1.6 }}>{ficheData.antecedents_medicaux}</p>
                         </div>
                       )}
@@ -551,15 +551,8 @@ export default function PersonnesPage() {
                           {/* Badges validations */}
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 12 }}>
                             <div style={{ padding: '9px 12px', background: c.documents_valides ? '#f0fdf4' : '#fef2f2', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 7, border: `1px solid ${c.documents_valides ? '#bbf7d0' : '#fecaca'}` }}>
-                              {c.documents_valides ? <CheckCircle size={14} style={{ color: '#059669' }} /> : <XCircle size={14} style={{ color: '#ef4444' }} />}
                               <span style={{ fontSize: 12, fontWeight: 500, color: c.documents_valides ? '#059669' : '#ef4444' }}>
                                 Documents {c.documents_valides ? 'complets' : 'incomplets'}
-                              </span>
-                            </div>
-                            <div style={{ padding: '9px 12px', background: c.certificat_medical_valide ? '#f0fdf4' : '#fef2f2', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 7, border: `1px solid ${c.certificat_medical_valide ? '#bbf7d0' : '#fecaca'}` }}>
-                              {c.certificat_medical_valide ? <CheckCircle size={14} style={{ color: '#059669' }} /> : <XCircle size={14} style={{ color: '#ef4444' }} />}
-                              <span style={{ fontSize: 12, fontWeight: 500, color: c.certificat_medical_valide ? '#059669' : '#ef4444' }}>
-                                Certificat médical {c.certificat_medical_valide ? 'valide' : 'manquant'}
                               </span>
                             </div>
                           </div>
