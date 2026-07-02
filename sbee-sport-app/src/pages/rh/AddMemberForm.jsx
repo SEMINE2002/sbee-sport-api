@@ -349,7 +349,7 @@ export default function AddMemberForm({ onOpenChange, onMemberAdded, member = nu
             <InputField label="Date de naissance" name="date_naissance" type="date" value={form.date_naissance} onChange={set} />
             <InputField label="Lieu de naissance" name="lieu_naissance" value={form.lieu_naissance} onChange={set} />
             <InputField label="Nationalité" name="nationalite" value={form.nationalite} onChange={set} />
-            <InputField label="Numéro CNI" name="cni_numero" value={form.cni_numero} onChange={set} icon={<CreditCard size={14} />} error={errors.cni_numero} />
+            <InputField label="Numéro CNI" name="cni_numero" value={form.cni_numero} onChange={set}  error={errors.cni_numero} />
             <SelectField label="Groupe Sanguin" name="groupe_sanguin" value={form.groupe_sanguin} onChange={set}>
               <option value="">Non renseigné</option>
               {['A+','A-','B+','B-','AB+','AB-','O+','O-'].map(g => <option key={g} value={g}>{g}</option>)}
@@ -376,13 +376,13 @@ export default function AddMemberForm({ onOpenChange, onMemberAdded, member = nu
 
         {step === 2 && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-            <InputField label="Téléphone" name="telephone" value={form.telephone} onChange={set} icon={<Phone size={14} />} error={errors.telephone} />
-            <InputField label="Email" name="email" type="email" value={form.email} onChange={set} icon={<Mail size={14} />} />
+            <InputField label="Téléphone" name="telephone" value={form.telephone} onChange={set}  error={errors.telephone} />
+            <InputField label="Email" name="email" type="email" value={form.email} onChange={set}  />
             <div style={{ gridColumn: 'span 2' }}>
-              <InputField label="Adresse" name="adresse" value={form.adresse} onChange={set} icon={<MapPin size={14} />} />
+              <InputField label="Adresse" name="adresse" value={form.adresse} onChange={set}  />
             </div>
-            <InputField label="Taille (cm)" name="taille_cm" type="number" value={form.taille_cm} onChange={set} icon={<Ruler size={14} />} error={errors.taille_cm} />
-            <InputField label="Poids (kg)" name="poids_kg" type="number" value={form.poids_kg} onChange={set} icon={<Weight size={14} />} error={errors.poids_kg} />
+            <InputField label="Taille (cm)" name="taille_cm" type="number" value={form.taille_cm} onChange={set}  error={errors.taille_cm} />
+            <InputField label="Poids (kg)" name="poids_kg" type="number" value={form.poids_kg} onChange={set}  error={errors.poids_kg} />
             <InputField label="Allergies" name="allergies" value={form.allergies} onChange={set} />
             <div style={{ gridColumn: 'span 2' }}>
               <InputField textarea label="Antécédents médicaux" name="antecedents_medicaux" value={form.antecedents_medicaux} onChange={set} />

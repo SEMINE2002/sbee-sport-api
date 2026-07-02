@@ -10,10 +10,10 @@ import {
 const API_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') ?? 'http://localhost:8000'
 
 const STATUT = {
-  ACTIF:    { label: 'Actif',    bg: '#ecfdf5', color: '#059669', border: '#a7f3d0', icon: <CheckCircle size={12}/> },
-  BLESSE:   { label: 'Blessé',  bg: '#fffbeb', color: '#d97706', border: '#fde68a', icon: <AlertTriangle size={12}/> },
-  SUSPENDU: { label: 'Suspendu',bg: '#fef2f2', color: '#dc2626', border: '#fecaca', icon: <XCircle size={12}/> },
-  ARCHIVE:  { label: 'Archivé', bg: '#f9fafb', color: '#6b7280', border: '#e5e7eb', icon: <XCircle size={12}/> },
+  ACTIF:    { label: 'Actif',    bg: '#ecfdf5', color: '#059669', border: '#a7f3d0' },
+  BLESSE:   { label: 'Blessé',  bg: '#fffbeb', color: '#d97706', border: '#fde68a'},
+  SUSPENDU: { label: 'Suspendu',bg: '#fef2f2', color: '#dc2626', border: '#fecaca' },
+  ARCHIVE:  { label: 'Archivé', bg: '#f9fafb', color: '#6b7280', border: '#e5e7eb'},
 }
 
 const ROLE_LABEL = {
@@ -331,7 +331,7 @@ export default function ContratsPage() {
 
                         <td style={{ padding: '12px 16px' }}>
                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', borderRadius: 99, fontSize: 11, fontWeight: 600, background: statut.bg, color: statut.color, border: `1px solid ${statut.border}` }}>
-                            {statut.icon} {statut.label}
+                             {statut.label}
                           </span>
                         </td>
 
