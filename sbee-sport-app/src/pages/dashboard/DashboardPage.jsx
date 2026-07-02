@@ -69,7 +69,7 @@ export default function DashboardPage() {
     return (
       <div style={skeletonContainer}>
         <RefreshCw size={28} className="animate-spin" style={{ color: '#ed1f24', marginBottom: 12 }} />
-        <p style={{ color: '#6b7280', fontSize: 14, fontWeight: 500 }}>Synchronisation des données financières...</p>
+        <p style={{ color: '#6b7280', fontSize: 14, fontWeight: 500 }}>Synchronisation des données...</p>
       </div>
     )
   }
@@ -95,11 +95,10 @@ export default function DashboardPage() {
       {/* Message de bienvenue */}
       <div style={welcomeRowStyle}>
         <div>
-          <h1 style={titleStyle}>Tableau de Bord <span>SBEE Sport</span></h1>
+          <h1 style={titleStyle}>Tableau de Bord </h1>
           <p style={subtitleStyle}>Suivi budgétaire et logistique en temps réel.</p>
         </div>
         <div style={badgeRoleStyle}>
-          <Shield size={14} style={{ color: '#ed1f24' }} />
           <span>{currentRole}</span>
         </div>
       </div>
@@ -107,9 +106,6 @@ export default function DashboardPage() {
       {canSeeReports && (
         <div style={reportBannerStyle}>
           <div style={reportLeftBlockStyle}>
-            <div style={downloadIconBoxStyle}>
-              <Download size={20} style={{ color: '#ed1f24' }} />
-            </div>
             <div>
               <h3 style={reportTitleStyle}>Rapports d'activités et Bilans</h3>
               <p style={reportSubtitleStyle}>
@@ -132,7 +128,7 @@ export default function DashboardPage() {
                   cursor: loadingPdf || loadingExcel ? 'not-allowed' : 'pointer'
                 }}
               >
-                {loadingPdf ? <Loader2 size={15} className="animate-spin" /> : <FileText size={15} />}
+                {loadingPdf ? <Loader2 size={15} className="animate-spin" /> : <FileText size={none} />}
                 <span>{loadingPdf ? 'Génération PDF...' : 'Bilan Général'}</span>
               </button>
             )}
@@ -147,7 +143,7 @@ export default function DashboardPage() {
                 cursor: loadingPdf || loadingExcel ? 'not-allowed' : 'pointer'
               }}
             >
-              {loadingExcel ? <Loader2 size={15} className="animate-spin" /> : <FileSpreadsheet size={15} />}
+              {loadingExcel ? <Loader2 size={15} className="animate-spin" /> : <FileSpreadsheet size={none} />}
               <span>{loadingExcel ? 'Livre de Caisse...' : 'Exporter le Budget'}</span>
             </button>
           </div>
