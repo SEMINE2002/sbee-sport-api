@@ -171,7 +171,6 @@ export default function DashboardPage() {
         <div style={cardStyle}>
           <div style={cardHeaderStyle}>
             <span style={cardTitleStyle}>Événements</span>
-            <div style={iconWrapperStyle}><Calendar size={20} style={{ color: '#10b981' }} /></div>
           </div>
           <div style={cardValueStyle}>{stats?.evenements_count ?? 0}</div>
           <p style={cardSubStyle}>Activités enregistrées</p>
@@ -180,7 +179,6 @@ export default function DashboardPage() {
         <div style={cardStyle}>
           <div style={cardHeaderStyle}>
             <span style={cardTitleStyle}>Enveloppe Budgétaire</span>
-            <div style={iconWrapperStyle}><Wallet size={20} style={{ color: '#f59e0b' }} /></div>
           </div>
           <div style={cardValueStyle}>{formatFCFA(budgetAlloue)}</div>
           <p style={cardSubStyle}>Cumul des budgets alloués</p>
@@ -189,7 +187,6 @@ export default function DashboardPage() {
         <div style={{ ...cardStyle, borderLeft: `4px solid #10b981` }}>
           <div style={cardHeaderStyle}>
             <span style={cardTitleStyle}>Montant Restant</span>
-            <div style={iconWrapperStyle}><Receipt size={20} style={{ color: '#10b981' }} /></div>
           </div>
           <div style={{ ...cardValueStyle, color: '#10b981' }}>
             {formatFCFA(soldeRestant)}
@@ -227,7 +224,7 @@ export default function DashboardPage() {
               <div style={{ background: '#f8fafc', padding: 14, borderRadius: 12, border: '1px solid #f1f5f9' }}>
                 <span style={{ fontSize: 11, color: '#64748b', fontWeight: 600 }}>Intégrité</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, fontSize: 13, fontWeight: 600, color: '#10b981' }}>
-                  <CheckCircle size={14} /> Sommes consolidées
+                  Sommes consolidées
                 </div>
               </div>
             </div>
