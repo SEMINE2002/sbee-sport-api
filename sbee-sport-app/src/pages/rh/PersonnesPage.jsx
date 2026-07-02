@@ -171,7 +171,7 @@ export default function PersonnesPage() {
         </div>
         <button onClick={() => setShowForm(true)}
           style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: '#ed1f24', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Poppins, sans-serif' }}>
-          <UserPlus size={16} /> Nouveau Membre
+          Nouveau Membre
         </button>
       </div>
 
@@ -336,8 +336,8 @@ export default function PersonnesPage() {
                           {contrat ? (
                             <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                               {contrat.documents_valides
-                                ? <><CheckCircle size={14} style={{ color: '#059669' }} /><span style={{ fontSize: 12, color: '#059669' }}>Complets</span></>
-                                : <><XCircle size={14} style={{ color: '#ef4444' }} /><span style={{ fontSize: 12, color: '#ef4444' }}>Incomplets</span></>}
+                                ? <><span style={{ fontSize: 12, color: '#059669' }}>Complets</span></>
+                                : <><span style={{ fontSize: 12, color: '#ef4444' }}>Incomplets</span></>}
                             </div>
                           ) : <span style={{ fontSize: 12, color: '#d1d5db' }}>—</span>}
                         </td>
@@ -355,7 +355,7 @@ export default function PersonnesPage() {
                             style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '6px 12px', border: '1px solid #e8e8e8', borderRadius: 7, background: '#fff', fontSize: 12, color: '#374151', cursor: 'pointer', fontFamily: 'Poppins, sans-serif' }}
                             onMouseEnter={e => { e.currentTarget.style.background = '#fef2f2'; e.currentTarget.style.color = '#ed1f24'; e.currentTarget.style.borderColor = '#fecaca' }}
                             onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = '#374151'; e.currentTarget.style.borderColor = '#e8e8e8' }}>
-                            <Eye size={13} /> Voir la fiche
+                             Voir la fiche
                           </button>
                         </td>
                       </tr>
@@ -445,11 +445,11 @@ export default function PersonnesPage() {
                   {/* Onglets */}
                   <div style={{ display: 'flex' }}>
                     {[
-                      { key: 'identite', label: 'Identité',  icon: <User size={13} /> },
-                      { key: 'contrat',  label: 'Contrat',   icon: <FileText size={13} /> },
-                      { key: 'documents',label: 'Documents', icon: <Download size={13} /> },
-                      { key: 'primes',   label: 'Primes',    icon: <TrendingUp size={13} /> },
-                      { key: 'palmares', label: 'Palmarès',  icon: <Award size={13} /> },
+                      { key: 'identite', label: 'Identité' },
+                      { key: 'contrat',  label: 'Contrat' },
+                      { key: 'documents',label: 'Documents' },
+                      { key: 'primes',   label: 'Primes' },
+                      { key: 'palmares', label: 'Palmarès' },
                     ].map(tab => (
                       <button key={tab.key} onClick={() => setFicheTab(tab.key)}
                         style={{
@@ -474,7 +474,7 @@ export default function PersonnesPage() {
                     <div>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                         {[
-                          { label: 'Sexe',           value: ficheData.sexe === 'M' ? '♂ Masculin' : ficheData.sexe === 'F' ? '♀ Féminin' : '—' },
+                          { label: 'Sexe',           value: ficheData.sexe === 'M' ? ' Masculin' : ficheData.sexe === 'F' ? ' Féminin' : '—' },
                           { label: 'Date naissance', value: ficheData.date_naissance ? new Date(ficheData.date_naissance).toLocaleDateString('fr-FR') : '—' },
                           { label: 'Lieu naissance', value: ficheData.lieu_naissance || '—' },
                           { label: 'Nationalité',    value: ficheData.nationalite || '—' },
@@ -661,7 +661,7 @@ export default function PersonnesPage() {
     fontSize: 12, fontWeight: 600, cursor: 'pointer' 
   }}
 >
-  <RefreshCw size={14} /> Modifier la fiche
+   Modifier la fiche
 </button>
 </div>
               </>
