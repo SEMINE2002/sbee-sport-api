@@ -190,7 +190,7 @@ export default function ContratsPage() {
       {/* ── Cartes d'alerte Dynamiques branchées sur le Backend ── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12, marginBottom: 20 }}>
         <AlertCard
-          icon={<AlertTriangle size={18} />}
+          
           label="Alerte 30 jours"
           sublabel="Non renouvelables"
           value={stats.nb_expirant_bientot}
@@ -199,7 +199,7 @@ export default function ContratsPage() {
           onClick={() => setAlerteFilter(a => a === 'expiration' ? '' : 'expiration')}
         />
         <AlertCard
-          icon={<RotateCcw size={18} />}
+          
           label="À reconduire"
           sublabel="Avis favorable"
           value={stats.nb_renouvelables}
@@ -208,7 +208,7 @@ export default function ContratsPage() {
           onClick={() => setAlerteFilter(a => a === 'renouvelable' ? '' : 'renouvelable')}
         />
         <AlertCard
-          icon={<XCircle size={18} />}
+          
           label="Expirés"
           sublabel="Contrats échus"
           value={stats.nb_expires}
@@ -217,7 +217,7 @@ export default function ContratsPage() {
           onClick={() => setAlerteFilter(a => a === 'expires' ? '' : 'expires')}
         />
         <AlertCard
-          icon={<CheckCircle size={18} />}
+          
           label="Actifs stables"
           sublabel="Dossiers en cours"
           value={stats.nb_actifs}
@@ -467,7 +467,7 @@ function ModalDetail({ contrat: c, onClose, onRenew, onChangeStatut }) {
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
+        <div style={ { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
           <div style={{ background: '#f9fafb', padding: '8px 12px', borderRadius: 6 }}>
             <span style={{ fontSize: 10, color: '#9ca3af', display: 'block' }}>Salaire de Base</span>
             <strong>{c.salaire_fixe > 0 ? `${Number(c.salaire_fixe).toLocaleString('fr-FR')} FCFA` : 'Primes Uniquement'}</strong>
