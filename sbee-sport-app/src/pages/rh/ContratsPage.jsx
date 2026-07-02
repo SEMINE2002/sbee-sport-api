@@ -177,12 +177,12 @@ export default function ContratsPage() {
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={handleAutoRenouveler} disabled={executingAuto}
             style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 14px', borderRadius: 8, background: '#059669', border: 'none', color: '#fff', fontSize: 13, cursor: 'pointer', fontWeight: 600 }}>
-            {executingAuto ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <Zap size={14} />} 
+            {executingAuto ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : null} 
             Renouvellement Auto (Favorable)
           </button>
           <button onClick={() => fetchContrats(pagination.current)}
             style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 14px', border: '1px solid #e8e8e8', borderRadius: 8, background: '#fff', fontSize: 13, cursor: 'pointer', color: '#6b7280' }}>
-            <RefreshCw size={14} /> Actualiser
+             Actualiser
           </button>
         </div>
       </div>
