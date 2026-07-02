@@ -485,9 +485,9 @@ export default function DisciplineSectionManager() {
                 </Field>
                 <Field label="Genre *" error={errorsSec.genre}>
                   <select value={formSec.genre} onChange={e => setFormSec(f => ({ ...f, genre: e.target.value }))} style={{ ...inputStyle, width: '100%', boxSizing: 'border-box', background: '#fff', height: 38 }}>
-                    <option value="M">♂ Masculin (M)</option>
-                    <option value="F">♀ Féminin (F)</option>
-                    <option value="MIXTE">⚦ Mixte (MIXTE)</option>
+                    <option value="M"> Masculin (M)</option>
+                    <option value="F"> Féminin (F)</option>
+                    <option value="MIXTE"> Mixte (MIXTE)</option>
                   </select>
                 </Field>
               </div>
