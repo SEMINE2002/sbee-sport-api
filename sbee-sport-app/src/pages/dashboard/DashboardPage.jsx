@@ -69,7 +69,7 @@ export default function DashboardPage() {
     return (
       <div style={skeletonContainer}>
         <RefreshCw size={28} className="animate-spin" style={{ color: '#ed1f24', marginBottom: 12 }} />
-        <p style={{ color: '#6b7280', fontSize: 14, fontWeight: 500 }}>Synchronisation des données financières...</p>
+        <p style={{ color: '#6b7280', fontSize: 14, fontWeight: 500 }}>Synchronisation des données...</p>
       </div>
     )
   }
@@ -95,7 +95,7 @@ export default function DashboardPage() {
       {/* Message de bienvenue */}
       <div style={welcomeRowStyle}>
         <div>
-          <h1 style={titleStyle}>Tableau de Bord <span>SBEE Sport</span></h1>
+          <h1 style={titleStyle}>Tableau de Bord </h1>
           <p style={subtitleStyle}>Suivi budgétaire et logistique en temps réel.</p>
         </div>
         <div style={badgeRoleStyle}>
@@ -109,7 +109,7 @@ export default function DashboardPage() {
         <div style={reportBannerStyle}>
           <div style={reportLeftBlockStyle}>
             <div style={downloadIconBoxStyle}>
-              <Download size={20} style={{ color: '#ed1f24' }} />
+              
             </div>
             <div>
               <h3 style={reportTitleStyle}>Rapports d'activités & Bilans</h3>
@@ -134,7 +134,7 @@ export default function DashboardPage() {
                   cursor: loadingPdf || loadingExcel ? 'not-allowed' : 'pointer'
                 }}
               >
-                {loadingPdf ? <Loader2 size={15} className="animate-spin" /> : <FileText size={15} />}
+                {loadingPdf ? <Loader2 size={15} className="animate-spin" /> : null}
                 <span>{loadingPdf ? 'Génération PDF...' : 'Bilan Général (PDF)'}</span>
               </button>
             )}
@@ -150,7 +150,7 @@ export default function DashboardPage() {
                 cursor: loadingPdf || loadingExcel ? 'not-allowed' : 'pointer'
               }}
             >
-              {loadingExcel ? <Loader2 size={15} className="animate-spin" /> : <FileSpreadsheet size={15} />}
+              {loadingExcel ? <Loader2 size={15} className="animate-spin" /> : null}
               <span>{loadingExcel ? 'Livre de Caisse (Excel)...' : 'Exporter le Budget (Excel)'}</span>
             </button>
           </div>
@@ -162,7 +162,6 @@ export default function DashboardPage() {
         <div style={cardStyle}>
           <div style={cardHeaderStyle}>
             <span style={cardTitleStyle}>Effectif Global</span>
-            <div style={iconWrapperStyle}><Users size={20} style={{ color: '#3b82f6' }} /></div>
           </div>
           <div style={cardValueStyle}>{stats?.membres_count ?? 0}</div>
           <p style={cardSubStyle}>Athlètes et personnels</p>
