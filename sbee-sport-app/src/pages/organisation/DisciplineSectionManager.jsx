@@ -267,7 +267,7 @@ export default function DisciplineSectionManager() {
             <RefreshCw size={14} />
           </button>
           <button onClick={openCreateDisc} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: '#ed1f24', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-            <Plus size={16} /> Nouvelle Discipline
+            Nouvelle Discipline
           </button>
         </div>
       </div>
@@ -327,7 +327,7 @@ export default function DisciplineSectionManager() {
                   </div>
                   <div style={{ display: 'flex', gap: 6 }} onClick={e => e.stopPropagation()}>
                     <button onClick={() => openCreateSec(disc)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '6px 12px', border: `1px solid ${colors.border}`, borderRadius: 7, background: colors.bg, fontSize: 12, color: colors.color, cursor: 'pointer', fontWeight: 500 }}>
-                      <Plus size={13} /> Section
+                       Section
                     </button>
                     <button onClick={() => openEditDisc(disc)} style={{ padding: '6px 8px', border: '1px solid #e8e8e8', borderRadius: 7, background: '#fff', cursor: 'pointer' }}><Edit2 size={13} /></button>
                     <button onClick={() => setConfirmDel({ type: 'disc', id: disc.id, nom: disc.nom })} style={{ padding: '6px 8px', border: '1px solid #fecaca', borderRadius: 7, background: '#fef2f2', cursor: 'pointer', color: '#ef4444' }}><Trash2 size={13} /></button>
@@ -364,7 +364,7 @@ export default function DisciplineSectionManager() {
                           <div style={{ marginTop: 16, background: '#fafafa', border: `1px solid ${colors.border}`, borderRadius: 12, padding: 16 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, borderBottom: '1px solid #e5e7eb', paddingBottom: 8 }}>
                               <h3 style={{ fontSize: 12, fontWeight: 700, color: '#374151', textTransform: 'uppercase', margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
-                                <Users size={14} style={{ color: colors.color }} /> Membres Actifs — {selectedSection.nom} ({selectedSection.contrats?.length ?? 0})
+                                Membres Actifs — {selectedSection.nom} ({selectedSection.contrats?.length ?? 0})
                               </h3>
                               <button onClick={() => setSelectedSection(null)} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer' }}><X size={16} /></button>
                             </div>
@@ -387,7 +387,7 @@ export default function DisciplineSectionManager() {
                                         {contrat.personne?.prenoms} {contrat.personne?.nom}
                                       </p>
                                       <p style={{ fontSize: 11, color: '#6b7280', margin: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
-                                        {contrat.type_role === 'JOUEUR' ? <Trophy size={11} style={{ color: '#f59e0b' }} /> : <Shield size={11} style={{ color: '#10b981' }} />}
+                                        {contrat.type_role === 'JOUEUR' ? null : null}
                                         {contrat.type_role}
                                       </p>
                                     </div>
@@ -413,7 +413,7 @@ export default function DisciplineSectionManager() {
           <div style={modalContent}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <h2 style={{ fontSize: 17, fontWeight: 700, margin: 0 }}>{modalDisc === 'create' ? 'Nouvelle Discipline' : `Modifier Discipline`}</h2>
-              <button onClick={() => setModalDisc(null)} style={{ border: 'none', background: '#f5f5f5', borderRadius: '50%', width: 30, height: 30, cursor: 'pointer' }}><X size={15} /></button>
+              <button onClick={() => setModalDisc(null)} style={{ border: 'none', background: '#f5f5f5', borderRadius: '50%', width: 30, height: 30, cursor: 'pointer' }}></button>
             </div>
             <form onSubmit={saveDisc}>
               
@@ -459,7 +459,7 @@ export default function DisciplineSectionManager() {
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 20 }}>
                 <button type="button" onClick={() => setModalDisc(null)} style={{ padding: '9px 18px', border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: 'pointer' }}>Annuler</button>
                 <button type="submit" disabled={saving} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '9px 18px', border: 'none', borderRadius: 8, background: '#ed1f24', color: '#fff', fontWeight: 600, cursor: 'pointer' }}>
-                  {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />} Enregistrer
+                  {saving ? <Loader2 size={15} className="animate-spin" /> : null} Enregistrer
                 </button>
               </div>
             </form>
@@ -500,7 +500,7 @@ export default function DisciplineSectionManager() {
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 20 }}>
                 <button type="button" onClick={() => setModalSec(null)} style={{ padding: '9px 18px', border: '1px solid #e5e5e5', borderRadius: 8, background: '#fff', cursor: 'pointer' }}>Annuler</button>
                 <button type="submit" disabled={saving} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '9px 18px', border: 'none', borderRadius: 8, background: '#ed1f24', color: '#fff', fontWeight: 600, cursor: 'pointer' }}>
-                  {saving ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />} Enregistrer
+                  {saving ? <Loader2 size={15} className="animate-spin" /> : null} Enregistrer
                 </button>
               </div>
             </form>
@@ -551,10 +551,10 @@ function SectionCard({ section, colors, isSelected, onClick, onEdit, onDelete })
       <p style={{ fontSize: 14, fontWeight: 700, color: colors.color, margin: '0 0 4px 0', paddingRight: 50 }}>{section.nom}</p>
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8, marginTop: 4 }}>
         {section.code_analytique && <span style={{ fontSize: 10, fontWeight: 600, background: 'rgba(0,0,0,0.05)', color: colors.color, padding: '2px 6px', borderRadius: 4 }}>{section.code_analytique}</span>}
-        <span style={{ fontSize: 10, fontWeight: 600, background: '#f4f4f5', color: '#52525b', padding: '2px 6px', borderRadius: 4 }}>♂ {section.genre}</span>
+        <span style={{ fontSize: 10, fontWeight: 600, background: '#f4f4f5', color: '#52525b', padding: '2px 6px', borderRadius: 4 }}> {section.genre}</span>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 8 }}>
-        <Users size={12} style={{ color: colors.color }} />
+        
         <span style={{ fontSize: 12, fontWeight: 600, color: colors.color }}>{section.nb_membres ?? 0} membre{(section.nb_membres ?? 0) > 1 ? 's' : ''}</span>
       </div>
     </div>
