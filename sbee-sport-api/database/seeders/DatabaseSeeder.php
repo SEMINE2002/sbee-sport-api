@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             // Ajoutez ici tous vos seeders dans l'ordre souhaité
             UserSeeder::class,
             RoleSeeder::class,
+            CompetitionEtPrimeSeeder::class,
             // TypeMaterielSeeder::class,
         ]);
     }

@@ -232,7 +232,7 @@ export default function EvenementsPage() {
             {['liste', 'calendrier'].map(v => (
               <button key={v} onClick={() => setVue(v)}
                 style={{ padding: '8px 14px', border: 'none', background: vue === v ? '#ed1f24' : '#fff', color: vue === v ? '#fff' : '#6b7280', fontSize: 13, cursor: 'pointer', fontFamily: 'Poppins, sans-serif', fontWeight: vue === v ? 600 : 400 }}>
-                {v === 'liste' ? '☰ Liste' : '📅 Calendrier'}
+                {v === 'liste' ? ' Liste' : ' Calendrier'}
               </button>
             ))}
           </div>
@@ -241,7 +241,7 @@ export default function EvenementsPage() {
               disabled={!saisonActive}
               onClick={() => { setEditEvt(null); setDateSelectionnee(null); setShowForm(true) }}
               style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: saisonActive ? '#ed1f24' : '#d1d5db', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: saisonActive ? 'pointer' : 'not-allowed', fontFamily: 'Poppins, sans-serif' }}>
-              <Plus size={16} /> Nouvel Événement
+              Nouvel Événement
             </button>
           )}
         </div>
@@ -303,7 +303,7 @@ export default function EvenementsPage() {
                   disabled={!saisonActive}
                   onClick={() => setShowForm(true)}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: saisonActive ? '#ed1f24' : '#d1d5db', color: '#fff', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: saisonActive ? 'pointer' : 'not-allowed', fontFamily: 'Poppins, sans-serif' }}>
-                  <Plus size={16} /> Créer le premier événement
+               Créer le premier événement
                 </button>
               )}
             </div>
@@ -356,33 +356,33 @@ export default function EvenementsPage() {
                         )}
                         {isVerrouille && (
                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, padding: '2px 8px', borderRadius: 99, background: '#f3f4f6', color: '#374151', fontWeight: 600, border: '1px solid #e5e7eb' }}>
-                            <Lock size={10} /> Clôturé
+                             Clôturé
                           </span>
                         )}
                       </div>
 
                       <div style={{ display: 'flex', gap: 14, marginTop: 5, flexWrap: 'wrap' }}>
                         <span style={{ fontSize: 12, color: '#6b7280', display: 'flex', alignItems: 'center', gap: 4 }}>
-                          <Clock size={11} /> {date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                          {date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                         </span>
                         {evt.lieu && (
                           <span style={{ fontSize: 12, color: '#6b7280', display: 'flex', alignItems: 'center', gap: 4 }}>
-                            <MapPin size={11} /> {evt.lieu}
+                             {evt.lieu}
                           </span>
                         )}
                         {evt.section && (
                           <span style={{ fontSize: 12, color: '#6b7280', display: 'flex', alignItems: 'center', gap: 4 }}>
-                            <Shield size={11} /> {evt.section.nom}
+                             {evt.section.nom}
                           </span>
                         )}
                         {evt.saison && (
                           <span style={{ fontSize: 12, color: '#9ca3af', display: 'flex', alignItems: 'center', gap: 4 }}>
-                            🌱 {evt.saison.nom}
+                             {evt.saison.nom}
                           </span>
                         )}
                         {evt.nb_presents != null && (
                           <span style={{ fontSize: 12, color: '#6b7280', display: 'flex', alignItems: 'center', gap: 4 }}>
-                            <Users size={11} /> {evt.nb_presents} présent{evt.nb_presents > 1 ? 's' : ''}
+                             {evt.nb_presents} présent{evt.nb_presents > 1 ? 's' : ''}
                           </span>
                         )}
                       </div>

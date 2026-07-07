@@ -136,7 +136,7 @@ export default function SaisonsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
           <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1f2937', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <CalendarDays style={{ color: '#ed1f24' }} />
+           
             Gestion des Saisons
           </h1>
           <p style={{ color: '#6b7280', fontSize: '14px', marginTop: '4px' }}>
@@ -153,7 +153,7 @@ export default function SaisonsPage() {
             fontWeight: '600', cursor: 'pointer', fontSize: '14px'
           }}
         >
-          <Plus size={18} />
+          
           Nouvelle Saison
         </button>
       </div>
@@ -194,7 +194,7 @@ export default function SaisonsPage() {
                       background: saison.is_active ? '#def7ec' : '#f3f4f6',
                       color: saison.is_active ? '#03543f' : '#4b5563'
                     }}>
-                      {saison.is_active ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
+                      {saison.is_active ? null : null}
                       {saison.is_active ? 'ACTIVE' : 'INACTIVE'}
                     </span>
                   </td>

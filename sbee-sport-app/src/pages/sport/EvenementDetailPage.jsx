@@ -12,8 +12,8 @@ const API_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') ?? 'http://lo
 
 // ── Configs ──
 const TYPE_CONFIG = {
-  MATCH:        { label: 'Match',         icon: '⚽', color: '#dc2626', bg: '#fef2f2', border: '#fecaca' },
-  ENTRAINEMENT: { label: 'Entraînement',  icon: '🏃', color: '#2563eb', bg: '#eff6ff', border: '#bfdbfe' },
+  MATCH:        { label: 'Match',         icon: '', color: '#dc2626', bg: '#fef2f2', border: '#fecaca' },
+  ENTRAINEMENT: { label: 'Entraînement',  icon: '', color: '#2563eb', bg: '#eff6ff', border: '#bfdbfe' },
  
 }
 
@@ -40,11 +40,11 @@ const SANCTION_CONFIG = {
 }
 
 const ROLE_MATCH_CONFIG = {
-  PRINCIPAL: { label: 'Coach Principal', emoji: '👨‍💼' },
-  ADJOINT:   { label: 'Coach Adjoint',   emoji: '🧑‍💼' },
-  KINE:      { label: 'Kiné',            emoji: '💆' },
-  MEDECIN:   { label: 'Médecin',         emoji: '🩺' },
-  INTENDANT: { label: 'Intendant',       emoji: '📦' },
+  PRINCIPAL: { label: 'Coach Principal', emoji: '' },
+  ADJOINT:   { label: 'Coach Adjoint',   emoji: '' },
+  KINE:      { label: 'Kiné',            emoji: '' },
+  MEDECIN:   { label: 'Médecin',         emoji: '' },
+  INTENDANT: { label: 'Intendant',       emoji: '' },
 }
 
 // Métriques par discipline
@@ -207,7 +207,7 @@ export default function EvenementDetailPage() {
     <div style={{ padding: 40, textAlign: 'center', color: '#9ca3af' }}>
       <AlertCircle size={32} style={{ margin: '0 auto 12px' }} />
       <p>{error ?? 'Événement introuvable'}</p>
-      <button onClick={() => navigate('/evenements')} style={btnSec}>← Retour</button>
+      <button onClick={() => navigate('/evenements')} style={btnSec}>Retour</button>
     </div>
   )
 
