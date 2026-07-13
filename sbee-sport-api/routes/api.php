@@ -83,7 +83,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // ---------------------------------------------------------------------
     Route::get('saisons/active', [SaisonController::class, 'current']);
     Route::get('saisons',        [SaisonController::class, 'index']);
-
+    Route::get('users/{user}/profile', [UserController::class, 'showProfile']);
     // --------------------------------------------------------
     // SUPER ADMIN uniquement
     // --------------------------------------------------------
@@ -91,7 +91,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::apiResource('users', UserController::class);
         Route::patch('users/{user}/toggle-actif',         [UserController::class, 'toggleActif']);
         Route::patch('users/{user}/reset-password-admin', [UserController::class, 'resetPasswordAdmin']);
-        Route::get('users/{user}/profile', [UserController::class, 'showProfile']);
+       
     });
 
     // --------------------------------------------------------

@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use App\Models\Transaction;
 
 class UserController extends Controller
 {
@@ -170,27 +171,35 @@ class UserController extends Controller
     }
 
     /**
-     * GET /api/users/{user}/profile
-     * Récupère les données complètes pour la page profil
-     */
-    public function showProfile($id): JsonResponse
+ * GET /api/users/{user}/profile
+ * Récupère les données complètes pour la page profil
+ */
+public function showProfile(User $user): JsonResponse
 {
-    $user = User::with(['personne', 'section.discipline'])->findOrFail($id);
+    // Eager loading pour éviter le N+1
+    $user->load(['personne', 'section.discipline']);
 
-    // 1. Calcul des statistiques (Matchs, Buts, Présence)
-    // On récupère les participations avec les performances et l'événement associé
-    $participations = $user->participations()->with(['evenement', 'performances'])->get();
+    // Récupération des participations avec les événements et performances
+    $participations = \App\Models\Participation::where('user_id', $user->id)
+        ->with(['evenement', 'performances'])
+        ->get();
     
-    $matchsCount = $participations->where('evenement.type', 'MATCH')->count();
+    // Statistiques
+    $matchs = $participations->filter(fn($p) => $p->evenement?->type === 'MATCH');
+    $matchsCount = $matchs->count();
+    
     $butsCount = $participations->flatMap->performances
         ->where('metrique', 'buts')
         ->sum('valeur');
     
-    // Calcul taux de présence (Ex: (Matchs joués / Matchs totaux) * 100)
-    $tauxPresence = $matchsCount > 0 ? ($matchsCount / 10) * 100 : 0; // Remplacez 10 par le total réel de matchs
+    // Calcul dynamique : On utilise le nombre total de matchs de la saison/section au lieu du fixe "10"
+    $totalMatchsSaison = \App\Models\Evenement::where('type', 'MATCH')
+        ->where('section_id', $user->section_id)
+        ->count();
+        
+    $tauxPresence = $totalMatchsSaison > 0 ? ($matchsCount / $totalMatchsSaison) * 100 : 0;
 
-    // 2. Calcul financier (Somme des transactions liées aux participations)
-    // En supposant que Transaction est liée à Evenement ou Participation
+    // Calcul financier
     $totalRevenus = Transaction::whereIn('participation_id', $participations->pluck('id'))
         ->sum('montant');
 
@@ -214,7 +223,6 @@ class UserController extends Controller
         ]
     ]);
 }
-
     /**
      * PATCH /api/users/{user}/reset-password-admin
      * Reset du mot de passe par l'admin (génère un nouveau mot de passe)
