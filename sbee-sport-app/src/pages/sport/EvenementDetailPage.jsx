@@ -418,12 +418,12 @@ export default function EvenementDetailPage() {
   const presents     = participations.filter(p => p.is_present)
 
   const tabs = [
-    { key: 'composition', label: `Composition (${participations.length})`, icon: '👥' },
-    { key: 'appel',       label: `Appel (${presents.length}/${participations.length})`, icon: '✅' },
-    { key: 'staff',       label: `Staff (${staffing.length})`, icon: '🧑‍💼' },
-    { key: 'performances',label: 'Performances', icon: '📊' },
-    { key: 'sanctions',   label: 'Sanctions', icon: '🟨' },
-    { key: 'resultat',    label: 'Résultat', icon: '🏆' },
+    { key: 'composition', label: `Composition (${participations.length})` },
+    { key: 'appel',       label: `Appel (${presents.length}/${participations.length})` },
+    { key: 'staff',       label: `Staff (${staffing.length})` },
+    { key: 'performances',label: 'Performances' },
+    { key: 'sanctions',   label: 'Sanctions'},
+    { key: 'resultat',    label: 'Résultat' },
   ]
 
   return (
@@ -462,7 +462,7 @@ export default function EvenementDetailPage() {
             {evt.lieu && <span style={{ fontSize: 12, color: '#6b7280', display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={12} /> {evt.lieu}</span>}
             {console.log("OBJET COMPLET EVT :", evt)}
 
-            {isMatch && <span style={{ fontSize: 12, color: '#6b7280' }}>{evt.domicile ? '🏠 Domicile' : '✈ Extérieur'}</span>}
+            {isMatch && <span style={{ fontSize: 12, color: '#6b7280' }}>{evt.domicile ? ' Domicile' : ' Extérieur'}</span>}
             <span style={{ fontSize: 12, color: '#6b7280', display: 'flex', alignItems: 'center', gap: 4 }}><Shield size={12} /> {evt.section?.nom}</span>
           </div>
         </div>
@@ -509,7 +509,7 @@ export default function EvenementDetailPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                    <h3 style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', margin: 0 }}>⚡ Titulaires ({titulaires.length})</h3>
+                    <h3 style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', margin: 0 }}> Titulaires ({titulaires.length})</h3>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                    {titulaires.map(p => (
