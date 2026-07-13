@@ -12,6 +12,7 @@ const MENUS = {
     
     { section: null, items: [{ to: '/dashboard',  label: 'Tableau de bord' }] },
     { section: 'Ressources Humaines', items: [
+      { to: '/', label: 'Accueil' },
       { to: '/personnes',  label: 'Gestion Joueurs' },
       { to: '/contrats',  label: 'Contrats' },
     ]},
@@ -33,6 +34,7 @@ const MENUS = {
   TRESORIER: [
     { section: null, items: [{ to: '/dashboard', label: 'Tableau de bord' }] },
     { section: 'Finances', items: [
+      { to: '/', label: 'Accueil' },
       { to: '/budgets',  label: 'Budgets' },
       { to: '/transactions', label: 'Transactions' },
     ]},
@@ -41,6 +43,7 @@ const MENUS = {
   RESPONSABLE_SECTION: [
     { section: null, items: [{ to: '/dashboard',  label: 'Tableau de bord' }] },
     { section: 'Ma Section', items: [
+      { to: '/', label: 'Accueil' },
       { to: '/personnes',  label: 'Mon Effectif' },
       { to: '/contrats',  label: 'Contrats Section' },
       { to: '/evenements',  label: 'Matchs & Entraînements' },
@@ -49,6 +52,7 @@ const MENUS = {
   COACH: [
     { section: null, items: [{ to: '/dashboard',  label: 'Tableau de bord' }] },
     { section: 'Suivi Sportif', items: [
+      { to: '/', label: 'Accueil' },
       { to: '/presences',  label: 'Présences' },
       { to: '/performances', label: 'Performances' },
       { to: '/sanctions',  label: 'Sanctions' },
@@ -58,6 +62,7 @@ const MENUS = {
   MEDECIN: [
     { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
     { section: 'Santé', items: [
+      { to: '/', label: 'Accueil' },
       { to: '/medical/dossiers',   label: 'Dossiers Médicaux' },
       { to: '/medical/suivi',  label: 'Consultations' },
     ]}
@@ -65,6 +70,7 @@ const MENUS = {
   JOUEUR: [
     { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
     { section: 'Personnel', items: [
+      { to: '/', label: 'Accueil' },
       { to: '/mon-planning',  label: 'Mon Planning' },
       { to: '/mes-infos',  label: 'Mes Informations' }
     ]}
@@ -72,6 +78,7 @@ const MENUS = {
   SPONSOR: [
     { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
     { section: 'Consultation', items: [
+      { to: '/', label: 'Accueil' },
       { to: '/rapports',  label: 'Tableau de bord Global' }
     ]}
   ]
@@ -98,27 +105,24 @@ export default function Sidebar({ isOpen, onClose }) {
         <img src="/logo.svg" alt="SBEE" style={{ height: '60px', width: '100%', maxWidth: '180px', objectFit: 'contain' }} />
       </div>
 
-      <nav style={{ flex: 1, overflowY: 'auto', padding: '10px 0' }}>
+     <nav style={{ flex: 1, overflowY: 'auto', padding: '10px 0' }}>
         {menus.map((group, gi) => (
-          <div key={gi}>
-            {group.section && <p className="section-title">{group.section}</p>}
-            {group.items.map(item => {
-              const IconComponent = item.icon
-              return (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  onClick={onClose}
-                  className={({ isActive }) => `nav-item ${isActive ? 'nav-active' : ''}`}
-                >
-                  <IconComponent size={18} strokeWidth={1.8} />
-                  <span>{item.label}</span>
-                </NavLink>
-              )
-            })}
-          </div>
-        ))}
-      </nav>
+    <div key={gi}>
+      {group.section && <p className="section-title">{group.section}</p>}
+      {group.items.map(item => (
+        <NavLink
+          key={item.to}
+          to={item.to}
+          onClick={onClose}
+          className={({ isActive }) => `nav-item ${isActive ? 'nav-active' : ''}`}
+        >
+          {/* L'icône est totalement supprimée ici */}
+          <span>{item.label}</span>
+        </NavLink>
+      ))}
+    </div>
+  ))}
+</nav>
 
       <div style={{ borderTop: '1px solid #f0f0f0', background: '#fcfcfc', paddingBottom: '10px' }}>
         <button 
