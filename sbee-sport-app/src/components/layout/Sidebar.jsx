@@ -9,7 +9,7 @@ import useAuthStore from '@/store/authStore'
 // ── CONFIGURATION COMPLÈTE DES MENUS PAR RÔLE ──
 const MENUS = {
   SUPER_ADMIN: [
-    { to: '/', label: 'Accueil' },
+    
     { section: null, items: [{ to: '/dashboard',  label: 'Tableau de bord' }] },
     { section: 'Ressources Humaines', items: [
       { to: '/personnes',  label: 'Gestion Joueurs' },
