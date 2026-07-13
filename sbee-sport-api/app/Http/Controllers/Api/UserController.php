@@ -170,6 +170,40 @@ class UserController extends Controller
     }
 
     /**
+     * GET /api/users/{user}/profile
+     * Récupère les données complètes pour la page profil
+     */
+    public function showProfile($id): JsonResponse
+    {
+        // On récupère l'utilisateur avec ses relations liées
+        $user = User::with(['personne', 'section.discipline'])->findOrFail($id);
+
+        // Vous pouvez ici structurer la réponse pour correspondre 
+        // exactement à ce que votre frontend attend (stats, finance, etc.)
+        return response()->json([
+            'id' => $user->id,
+            'nom' => $user->name,
+            'email' => $user->email,
+            'poste' => $user->role_systeme, 
+            'matricule' => $user->personne ? $user->personne->matricule : 'N/A',
+            'statut' => $user->is_actif ? 'VALIDÉ' : 'EN ATTENTE',
+            // Exemple d'ajout de données calculées ou liées
+            'stats' => [
+                'matchs' => 12, // À remplacer par vos données réelles
+                'buts' => 5,
+                'presence' => 95
+            ],
+            'finance' => [
+                'montant' => '250.000 FCFA'
+            ],
+            'documents' => [
+                ['nom' => 'Contrat de travail', 'etat' => 'VALIDÉ'],
+                ['nom' => 'Certificat médical', 'etat' => 'EN ATTENTE']
+            ]
+        ]);
+    }
+
+    /**
      * PATCH /api/users/{user}/reset-password-admin
      * Reset du mot de passe par l'admin (génère un nouveau mot de passe)
      */

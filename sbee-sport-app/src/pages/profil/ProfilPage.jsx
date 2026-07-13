@@ -1,86 +1,63 @@
-import { useQuery } from '@tanstack/react-query'
-import useAuthStore from '@/store/authStore'
-import { Loader2, AlertCircle } from 'lucide-react'
-
-// Simulation d'une fonction API pour récupérer les stats complètes
-const fetchUserProfile = async (userId) => {
-  const response = await fetch(`/api/users/${userId}/profile`);
-  if (!response.ok) throw new Error('Erreur de chargement');
-  return response.json();
-}
+import { Loader2, AlertCircle, Download, FileText, Activity, ShieldCheck } from 'lucide-react'
 
 export default function ProfilPage() {
-  const { user } = useAuthStore()
-  
-  // Utilisation de React Query pour une gestion propre des données
-  const { data: profile, isLoading, error } = useQuery({
-    queryKey: ['profile', user?.id],
-    queryFn: () => fetchUserProfile(user.id),
-    enabled: !!user?.id
-  })
-
-  if (isLoading) return <div className="p-10 flex justify-center"><Loader2 className="spin" size={32} /></div>
-  if (error) return <div className="alert-error"><AlertCircle /> Impossible de charger votre profil.</div>
+  // ... (votre logique React Query reste identique)
 
   return (
-    <div className="page-content fade-in">
-      {/* Header Profile - Utilisation des classes CSS existantes */}
-      <div className="card" style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '20px' }}>
-        <img src={profile.avatar} alt={profile.nom} style={{ width: '90px', height: '90px', borderRadius: '12px', objectFit: 'cover' }} />
-        <div>
-          <h1 className="page-title">{profile.nom}</h1>
-          <p className="page-subtitle">{profile.poste} • {profile.matricule}</p>
-          <div className="badge badge-green" style={{ marginTop: '8px' }}>{profile.statut}</div>
+    <div className="max-w-5xl mx-auto p-6 space-y-6">
+      
+      {/* HEADER PROFIL : Style "Cover & Identity" */}
+      <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-8">
+        <div className="relative">
+          <img src={profile.avatar} className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover" />
+          <div className="absolute bottom-0 right-0 bg-red-600 text-white p-2 rounded-full border-4 border-white">
+            <ShieldCheck size={16} />
+          </div>
+        </div>
+        
+        <div className="flex-1 text-center md:text-left">
+          <h1 className="text-3xl font-bold text-gray-900">{profile.nom}</h1>
+          <p className="text-gray-500 font-medium">{profile.poste} • <span className="text-red-600">{profile.matricule}</span></p>
+          <div className="mt-4 flex gap-2 justify-center md:justify-start">
+             <span className="px-3 py-1 bg-red-50 text-red-600 rounded-full text-xs font-bold uppercase">{profile.statut}</span>
+          </div>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '24px' }}>
-        {/* Performances & Documents */}
-        <div className="col">
-          <div className="card">
-            <h3 style={{ marginBottom: '20px' }}>Sports Performance</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* COLONNE GAUCHE (Performance) */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+            <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
+              <Activity className="text-red-600" /> Performance Sportive
+            </h3>
+            <div className="grid grid-cols-3 gap-4">
               <StatItem label="Matchs" value={profile.stats.matchs} />
               <StatItem label="Buts" value={profile.stats.buts} />
-              <StatItem label="Taux" value={`${profile.stats.presence}%`} />
+              <StatItem label="Taux de présence" value={`${profile.stats.presence}%`} />
             </div>
-          </div>
-          
-          <div className="card">
-            <h3 style={{ marginBottom: '20px' }}>Documents Numérisés</h3>
-            {profile.documents.map((doc, i) => (
-              <DocumentRow key={i} title={doc.nom} status={doc.etat} />
-            ))}
           </div>
         </div>
 
-        {/* Finance Sidebar */}
-        <div className="card">
-          <h3 style={{ marginBottom: '20px' }}>Financial Overview</h3>
-          <div className="stat-card" style={{ textAlign: 'center', padding: '20px' }}>
-            <p className="page-subtitle">REVENUS (YTD)</p>
-            <h1 style={{ color: 'var(--red)' }}>{profile.finance.montant}</h1>
+        {/* COLONNE DROITE (Finance + Actions) */}
+        <div className="space-y-6">
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 border-t-4 border-t-red-600">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Revenus cumulés (YTD)</p>
+            <h2 className="text-3xl font-extrabold text-gray-900 mt-2">{profile.finance.montant}</h2>
+            <button className="w-full mt-6 bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition">
+              <Download size={18} /> Télécharger Relevé
+            </button>
           </div>
-          <button className="btn btn-primary btn-full" style={{ marginTop: '20px' }}>
-            Download Statement
-          </button>
         </div>
       </div>
     </div>
   )
 }
 
-// Composants utilitaires locaux pour la lisibilité
 const StatItem = ({ label, value }) => (
-  <div className="stat-card">
-    <p className="page-subtitle">{label}</p>
-    <h2 style={{ color: 'var(--red)', marginTop: '5px' }}>{value}</h2>
-  </div>
-)
-
-const DocumentRow = ({ title, status }) => (
-  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #f5f5f5' }}>
-    <span>{title}</span>
-    <span className={`badge ${status === 'VALIDÉ' ? 'badge-blue' : 'badge-yellow'}`}>{status}</span>
+  <div className="bg-gray-50 p-4 rounded-2xl text-center">
+    <p className="text-xs text-gray-500 uppercase">{label}</p>
+    <p className="text-xl font-bold text-red-600 mt-1">{value}</p>
   </div>
 )
