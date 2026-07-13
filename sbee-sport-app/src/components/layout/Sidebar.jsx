@@ -137,7 +137,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
       <style>{`
         .section-title { font-size: 13px; font-weight: 700; color: #94a3b8; text-transform: uppercase; padding: 15px 20px 5px; letter-spacing: 0.5px; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #4b5563; text-decoration: none; font-size: 13.5px; transition: all 0.2s ease; border-left: 3px solid transparent; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #4b5563; text-decoration: none; font-size: 15.5px; transition: all 0.2s ease; border-left: 3px solid transparent; }
         .nav-item:hover { background: #f9fafb; color: #ed1f24; }
         .nav-active { background: #fef2f2 !important; color: #ed1f24 !important; font-weight: 600; border-left: 3px solid #ed1f24 !important; }
         .nav-danger { color: #dc2626 !important; }
