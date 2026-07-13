@@ -103,7 +103,7 @@ export default function Sidebar({ isOpen, onClose }) {
           <div key={gi}>
             {group.section && <p className="section-title">{group.section}</p>}
             {group.items.map(item => {
-              const IconComponent = undefined
+              const IconComponent = item.icon
               return (
                 <NavLink
                   key={item.to}
