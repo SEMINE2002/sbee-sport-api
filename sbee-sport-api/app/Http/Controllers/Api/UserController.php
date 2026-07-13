@@ -174,34 +174,46 @@ class UserController extends Controller
      * Récupère les données complètes pour la page profil
      */
     public function showProfile($id): JsonResponse
-    {
-        // On récupère l'utilisateur avec ses relations liées
-        $user = User::with(['personne', 'section.discipline'])->findOrFail($id);
+{
+    $user = User::with(['personne', 'section.discipline'])->findOrFail($id);
 
-        // Vous pouvez ici structurer la réponse pour correspondre 
-        // exactement à ce que votre frontend attend (stats, finance, etc.)
-        return response()->json([
-            'id' => $user->id,
-            'nom' => $user->name,
-            'email' => $user->email,
-            'poste' => $user->role_systeme, 
-            'matricule' => $user->personne ? $user->personne->matricule : 'N/A',
-            'statut' => $user->is_actif ? 'VALIDÉ' : 'EN ATTENTE',
-            // Exemple d'ajout de données calculées ou liées
-            'stats' => [
-                'matchs' => 12, // À remplacer par vos données réelles
-                'buts' => 5,
-                'presence' => 95
-            ],
-            'finance' => [
-                'montant' => '250.000 FCFA'
-            ],
-            'documents' => [
-                ['nom' => 'Contrat de travail', 'etat' => 'VALIDÉ'],
-                ['nom' => 'Certificat médical', 'etat' => 'EN ATTENTE']
-            ]
-        ]);
-    }
+    // 1. Calcul des statistiques (Matchs, Buts, Présence)
+    // On récupère les participations avec les performances et l'événement associé
+    $participations = $user->participations()->with(['evenement', 'performances'])->get();
+    
+    $matchsCount = $participations->where('evenement.type', 'MATCH')->count();
+    $butsCount = $participations->flatMap->performances
+        ->where('metrique', 'buts')
+        ->sum('valeur');
+    
+    // Calcul taux de présence (Ex: (Matchs joués / Matchs totaux) * 100)
+    $tauxPresence = $matchsCount > 0 ? ($matchsCount / 10) * 100 : 0; // Remplacez 10 par le total réel de matchs
+
+    // 2. Calcul financier (Somme des transactions liées aux participations)
+    // En supposant que Transaction est liée à Evenement ou Participation
+    $totalRevenus = Transaction::whereIn('participation_id', $participations->pluck('id'))
+        ->sum('montant');
+
+    return response()->json([
+        'id' => $user->id,
+        'nom' => $user->name,
+        'poste' => $user->role_systeme,
+        'matricule' => $user->personne?->matricule ?? 'N/A',
+        'statut' => $user->is_actif ? 'VALIDÉ' : 'EN ATTENTE',
+        'stats' => [
+            'matchs' => $matchsCount,
+            'buts' => (int)$butsCount,
+            'presence' => round($tauxPresence, 1)
+        ],
+        'finance' => [
+            'montant' => number_format($totalRevenus, 0, ',', '.') . ' FCFA'
+        ],
+        'documents' => [
+            ['nom' => 'Dossier Sportif', 'etat' => 'VALIDÉ'],
+            ['nom' => 'Fiche Médicale', 'etat' => $user->is_actif ? 'VALIDÉ' : 'EN ATTENTE']
+        ]
+    ]);
+}
 
     /**
      * PATCH /api/users/{user}/reset-password-admin

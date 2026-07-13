@@ -110,4 +110,12 @@ class User extends Authenticatable
     {
         return $this->is_actif === true;
     }
+
+    public function participations()
+{
+    // On suppose que la table 'participations' a une colonne 'user_id' ou 'personne_id'
+    // Vérifiez si c'est 'user_id' ou 'joueur_id' selon votre base de données
+    return $this->hasMany(Participation::class, 'user_id'); 
 }
+}
+
