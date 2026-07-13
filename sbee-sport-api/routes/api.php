@@ -207,7 +207,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('evenements/{evenement}/participations', [EvenementController::class, 'enregistrerParticipations']);
             Route::post('evenements/{evenement}/cloturer',       [EvenementController::class, 'cloturer']);
             Route::post('evenements/{evenement}/decloturer',     [EvenementController::class, 'decloturer']);
-
+            Route::post('evenements/{evenement}/staffing', [EvenementController::class, 'ajouterStaff']);
+            
             // Transactions
             Route::get('transactions/{transaction}',        [TransactionController::class, 'show']);
             Route::patch('transactions/{transaction}/valider-n1', [TransactionController::class, 'validerN1']);
