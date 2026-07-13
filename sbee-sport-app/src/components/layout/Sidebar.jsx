@@ -9,69 +9,70 @@ import useAuthStore from '@/store/authStore'
 // ── CONFIGURATION COMPLÈTE DES MENUS PAR RÔLE ──
 const MENUS = {
   SUPER_ADMIN: [
-    { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
+    { to: '/', label: 'Accueil' },
+    { section: null, items: [{ to: '/dashboard',  label: 'Tableau de bord' }] },
     { section: 'Ressources Humaines', items: [
-      { to: '/personnes', icon: Users, label: 'Gestion Joueurs' },
-      { to: '/contrats', icon: FileText, label: 'Contrats' },
+      { to: '/personnes',  label: 'Gestion Joueurs' },
+      { to: '/contrats',  label: 'Contrats' },
     ]},
     { section: 'Structure', items: [
-      { to: '/discipline', icon: Layers, label: 'Disciplines & Sections' },
-      { to: '/saisons', icon: History, label: 'Saisons' },
+      { to: '/discipline',  label: 'Disciplines & Sections' },
+      { to: '/saisons',  label: 'Saisons' },
     ]},
-    { section: 'Activité', items: [{ to: '/evenements', icon: Calendar, label: 'Calendrier' }] },
+    { section: 'Activité', items: [{ to: '/evenements', label: 'Calendrier' }] },
     { section: 'Finance', items: [
-      { to: '/budgets', icon: Wallet, label: 'Budgets' },
-      { to: '/transactions', icon: Receipt, label: 'Transactions' },
+      { to: '/budgets',  label: 'Budgets' },
+      { to: '/transactions',  label: 'Transactions' },
     ]},
     { section: 'Inventaire', items: [
-      { to: '/stocks', icon: Package, label: 'Stocks' },
-      { to: '/dotations', icon: Truck, label: 'Dotations' },
+      { to: '/stocks', label: 'Stocks' },
+      { to: '/dotations',  label: 'Dotations' },
     ]},
-    { section: 'Pilotage', items: [{ to: '/rapports', icon: BarChart3, label: 'Rapports' }] },
+    { section: 'Pilotage', items: [{ to: '/rapports',  label: 'Rapports' }] },
   ],
   TRESORIER: [
-    { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
+    { section: null, items: [{ to: '/dashboard', label: 'Tableau de bord' }] },
     { section: 'Finances', items: [
-      { to: '/budgets', icon: Wallet, label: 'Budgets' },
-      { to: '/transactions', icon: Receipt, label: 'Transactions' },
+      { to: '/budgets',  label: 'Budgets' },
+      { to: '/transactions', label: 'Transactions' },
     ]},
-    { section: 'Pilotage', items: [{ to: '/rapports', icon: BarChart3, label: 'Rapports Financiers' }] },
+    { section: 'Pilotage', items: [{ to: '/rapports',  label: 'Rapports Financiers' }] },
   ],
   RESPONSABLE_SECTION: [
-    { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
+    { section: null, items: [{ to: '/dashboard',  label: 'Tableau de bord' }] },
     { section: 'Ma Section', items: [
-      { to: '/personnes', icon: Users, label: 'Mon Effectif' },
-      { to: '/contrats', icon: FileText, label: 'Contrats Section' },
-      { to: '/evenements', icon: Calendar, label: 'Matchs & Entraînements' },
+      { to: '/personnes',  label: 'Mon Effectif' },
+      { to: '/contrats',  label: 'Contrats Section' },
+      { to: '/evenements',  label: 'Matchs & Entraînements' },
     ]},
   ],
   COACH: [
-    { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
+    { section: null, items: [{ to: '/dashboard',  label: 'Tableau de bord' }] },
     { section: 'Suivi Sportif', items: [
-      { to: '/presences', icon: CheckCircle, label: 'Présences' },
-      { to: '/performances', icon: Activity, label: 'Performances' },
-      { to: '/sanctions', icon: Award, label: 'Sanctions' },
-      { to: '/evenements', icon: Calendar, label: 'Calendrier' },
+      { to: '/presences',  label: 'Présences' },
+      { to: '/performances', label: 'Performances' },
+      { to: '/sanctions',  label: 'Sanctions' },
+      { to: '/evenements', label: 'Calendrier' },
     ]},
   ],
   MEDECIN: [
     { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
     { section: 'Santé', items: [
-      { to: '/medical/dossiers', icon: Stethoscope, label: 'Dossiers Médicaux' },
-      { to: '/medical/suivi', icon: Activity, label: 'Consultations' },
+      { to: '/medical/dossiers',   label: 'Dossiers Médicaux' },
+      { to: '/medical/suivi',  label: 'Consultations' },
     ]}
   ],
   JOUEUR: [
     { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
     { section: 'Personnel', items: [
-      { to: '/mon-planning', icon: Calendar, label: 'Mon Planning' },
-      { to: '/mes-infos', icon: FileText, label: 'Mes Informations' }
+      { to: '/mon-planning',  label: 'Mon Planning' },
+      { to: '/mes-infos',  label: 'Mes Informations' }
     ]}
   ],
   SPONSOR: [
     { section: null, items: [{ to: '/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' }] },
     { section: 'Consultation', items: [
-      { to: '/rapports', icon: BarChart3, label: 'Tableau de bord Global' }
+      { to: '/rapports',  label: 'Tableau de bord Global' }
     ]}
   ]
 }
@@ -102,7 +103,7 @@ export default function Sidebar({ isOpen, onClose }) {
           <div key={gi}>
             {group.section && <p className="section-title">{group.section}</p>}
             {group.items.map(item => {
-              const IconComponent = item.icon
+              const IconComponent = undefined
               return (
                 <NavLink
                   key={item.to}
