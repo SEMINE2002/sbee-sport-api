@@ -1,93 +1,283 @@
-# sbee_projet_sportif
+#  SBEE Sports — Application de gestion sportive
 
+##  Présentation
 
+**SBEE Sports** est une application web de gestion sportive conçue pour centraliser les activités administratives, sportives, financières et logistiques d'un club professionnel.
 
-## Getting started
+L'application permet de regrouper les informations relatives aux joueurs, au personnel, aux contrats, aux événements sportifs, aux budgets, aux dépenses et aux équipements au sein d'une plateforme unique.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+L'objectif est de faciliter le suivi des activités, d'améliorer l'organisation des données et de fournir aux responsables des informations utiles à la prise de décision.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+---
 
-## Add your files
+##  Problématique
 
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+La gestion traditionnelle d'un club sportif peut s'appuyer sur des documents papier et différents fichiers Excel, ce qui peut entraîner :
 
+* une dispersion des informations ;
+* des difficultés de suivi des contrats ;
+* un manque de visibilité sur les dépenses ;
+* des risques de perte ou de duplication des données ;
+* des difficultés dans le suivi des équipements ;
+* un accès limité aux statistiques et rapports.
+
+Cette application apporte une solution centralisée permettant de mieux organiser et suivre ces différentes activités.
+
+---
+
+##  Fonctionnalités principales
+
+###  Gestion des utilisateurs
+
+* création et gestion des utilisateurs ;
+* gestion des rôles ;
+* gestion des permissions ;
+* contrôle des accès selon le profil utilisateur.
+
+###  Gestion sportive
+
+* gestion des joueurs ;
+* gestion du personnel sportif ;
+* gestion des équipes et sections ;
+* gestion des événements sportifs ;
+* suivi des matchs et activités ;
+* suivi des présences ;
+* suivi des performances.
+
+###  Gestion des contrats
+
+* enregistrement des contrats ;
+* suivi des informations contractuelles ;
+* gestion des documents associés ;
+* consultation des informations relatives aux contrats.
+
+###  Gestion financière
+
+* gestion des budgets ;
+* enregistrement des transactions ;
+* suivi des dépenses ;
+* suivi des ressources financières ;
+* statistiques financières.
+
+###  Gestion des équipements
+
+* gestion des équipements sportifs ;
+* suivi des stocks ;
+* suivi des entrées et sorties ;
+* contrôle des ressources disponibles.
+
+###  Tableaux de bord
+
+* indicateurs de suivi ;
+* statistiques ;
+* synthèse des activités ;
+* visualisation des informations importantes.
+
+---
+
+##  Gestion des rôles
+
+L'application repose sur un système d'accès basé sur les rôles.
+
+### Super administrateur
+
+Accès global à l'application :
+
+* utilisateurs et permissions ;
+* joueurs et personnel ;
+* contrats et documents ;
+* budgets et transactions ;
+* événements ;
+* équipements ;
+* rapports et statistiques.
+
+### Trésorier
+
+Gestion principalement orientée vers les activités financières :
+
+* budgets ;
+* transactions ;
+* dépenses ;
+* primes et bonus ;
+* statistiques financières.
+
+### Responsable de section
+
+Gestion des activités de sa section :
+
+* joueurs ;
+* contrats ;
+* événements ;
+* entraînements ;
+* présences ;
+* équipements ;
+* ressources ;
+* rapports.
+
+### Coach
+
+Gestion des activités sportives :
+
+* événements ;
+* entraînements ;
+* présences ;
+* performances ;
+* sanctions.
+
+### Médecin
+
+Gestion des informations médicales et du suivi des consultations des sportifs.
+
+---
+
+##  Architecture
+
+L'application est basée sur une architecture séparant les différentes responsabilités du système.
+
+Le backend assure notamment :
+
+* la logique métier ;
+* l'accès aux données ;
+* l'authentification ;
+* la gestion des utilisateurs ;
+* les rôles et permissions ;
+* les API.
+
+Le frontend permet aux utilisateurs d'interagir avec les différentes fonctionnalités de l'application.
+
+---
+
+##  Technologies utilisées
+
+### Backend
+
+* PHP
+* Laravel
+
+### Frontend
+
+* React
+* JavaScript
+* HTML5
+* Tailwind CSS
+
+### Base de données
+
+* MySQL
+
+### Gestion de versions
+
+* Git
+* GitHub
+
+---
+
+##  Sécurité
+
+L'application intègre un système de contrôle d'accès permettant de limiter les fonctionnalités accessibles à chaque utilisateur selon son rôle et ses permissions.
+
+Les données sont organisées dans une base de données centralisée afin de faciliter leur gestion et leur sécurisation.
+
+---
+
+##  Captures d'écran
+
+Les captures d'écran de l'application seront ajoutées dans cette section afin de présenter les principales interfaces :
+
+* tableau de bord ;
+* gestion des joueurs ;
+* gestion des contrats ;
+* gestion des budgets ;
+* gestion des événements ;
+* gestion des équipements ;
+* gestion des utilisateurs.
+
+---
+
+##  Structure du projet
+
+```text
+sbee-sport-api/
+│
+├── app/
+├── config/
+├── database/
+├── public/
+├── resources/
+├── routes/
+├── storage/
+├── tests/
+├── .env.example
+├── composer.json
+└── README.md
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/seminesem2/sbee_projet_sportif.git
-git branch -M main
-git push -uf origin main
+
+---
+
+##  Installation
+
+### 1. Cloner le repository
+
+```bash
+git clone https://github.com/SEMINE2002/sbee-sport-api.git
 ```
 
-## Integrate with your tools
+### 2. Accéder au projet
 
-* [Set up project integrations](https://gitlab.com/seminesem2/sbee_projet_sportif/-/settings/integrations)
+```bash
+cd sbee-sport-api
+```
 
-## Collaborate with your team
+### 3. Installer les dépendances PHP
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+```bash
+composer install
+```
 
-## Test and Deploy
+### 4. Créer le fichier d'environnement
 
-Use the built-in continuous integration in GitLab.
+```bash
+cp .env.example .env
+```
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+Sous Windows, vous pouvez également créer manuellement le fichier `.env` à partir de `.env.example`.
 
-***
+### 5. Générer la clé Laravel
 
-# Editing this README
+```bash
+php artisan key:generate
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### 6. Configurer la base de données
 
-## Suggestions for a good README
+Modifier les informations de connexion à la base de données dans le fichier `.env`.
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### 7. Exécuter les migrations
 
-## Name
-Choose a self-explaining name for your project.
+```bash
+php artisan migrate
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### 8. Lancer l'application
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```bash
+php artisan serve
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+---
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+##  État du projet
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Projet développé dans le cadre de ma formation en **Systèmes Informatiques et Génie Logiciel** et de mon expérience au sein de la **Direction des Systèmes d'Information et de la Transformation Digitale (DSI-TD) de la SBEE**.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Le projet constitue également une base de travail pouvant être améliorée avec de nouvelles fonctionnalités et intégrations.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+---
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+##  Auteur
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+**Sèmine Oyenian**
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Développeur Web & Solutions de Gestion
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+GitHub : https://github.com/SEMINE2002
