@@ -1,59 +1,126 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SBEE Sports — API de gestion sportive
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API backend développée avec Laravel pour une application web de gestion sportive. Elle a pour objectif de centraliser les informations administratives, sportives et financières d'un club.
 
-## About Laravel
+## Présentation du projet
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+SBEE Sports est un projet de digitalisation de la gestion d'un club sportif professionnel. Il vise à faciliter l'organisation des informations et le suivi des activités grâce à une application web centralisée.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Le backend fournit la logique métier, l'accès aux données et les services nécessaires au fonctionnement du frontend.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Fonctionnalités
 
-## Learning Laravel
+Les fonctionnalités ci-dessous décrivent les domaines couverts par le projet. Leur disponibilité effective dépend de l'implémentation dans le code.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **Utilisateurs et permissions :** gestion des accès selon les rôles.
+- **Gestion sportive :** joueurs, personnel, sections et événements.
+- **Gestion des contrats :** informations contractuelles et documents associés.
+- **Gestion financière :** budgets, dépenses et transactions.
+- **Gestion des équipements :** inventaire et suivi des ressources.
+- **Rapports et statistiques :** données utiles au suivi des activités.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Technologies
 
-## Laravel Sponsors
+- **Backend :** PHP et Laravel
+- **Base de données de production :** PostgreSQL, selon la configuration de déploiement
+- **Base de données :** migrations et seeders Laravel
+- **API :** routes et contrôleurs Laravel
+- **Gestion de versions :** Git et GitHub
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Architecture du projet
 
-### Premium Partners
+Le backend suit l'organisation conventionnelle d'une application Laravel.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- `app/` : logique applicative, modèles et contrôleurs.
+- `bootstrap/` : initialisation de l'application.
+- `config/` : configuration.
+- `database/` : migrations, factories et seeders.
+- `public/` : point d'entrée HTTP et ressources publiques.
+- `routes/` : définition des routes.
+- `storage/` : journaux et fichiers générés.
+- `tests/` : tests automatisés.
+- `.env.example` : modèle de configuration locale.
 
-## Contributing
+## Prérequis
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Avant l'installation, assurez-vous de disposer de :
 
-## Code of Conduct
+- PHP dans une version compatible avec le projet ;
+- Composer ;
+- PostgreSQL ou un autre moteur compatible avec la configuration ;
+- Node.js et npm si des ressources frontend doivent être compilées.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Consultez `composer.json` pour connaître la version de PHP requise et les dépendances exactes.
 
-## Security Vulnerabilities
+## Installation en local
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 1. Cloner le repository
 
-## License
+```bash
+git clone https://github.com/SEMINE2002/sbee-sport-api.git
+cd sbee-sport-api/sbee-sport-api
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 2. Installer les dépendances
+
+```bash
+composer install
+```
+
+### 3. Configurer l'environnement
+
+Sous macOS ou Linux :
+
+```bash
+cp .env.example .env
+```
+
+Sous Windows, copiez `.env.example` dans un nouveau fichier nommé `.env`.
+
+Configurez ensuite les paramètres de l'application et de la base de données dans `.env`.
+
+### 4. Générer la clé de l'application
+
+```bash
+php artisan key:generate
+```
+
+### 5. Préparer la base de données
+
+Après avoir configuré la connexion :
+
+```bash
+php artisan migrate
+```
+
+N'exécutez les seeders que si vous avez vérifié leur contenu et compris les données qu'ils insèrent.
+
+### 6. Démarrer le serveur
+
+```bash
+php artisan serve
+```
+
+Par défaut, le serveur de développement Laravel est accessible à l'adresse `http://127.0.0.1:8000`.
+
+## Configuration de production
+
+En production, les variables d'environnement doivent être configurées dans l'environnement sécurisé de l'hébergeur.
+
+Ne publiez jamais de mots de passe, de clés privées, de tokens ou de fichiers `.env` contenant des secrets.
+
+## Sécurité
+
+Le contrôle d'accès, la validation des données, la gestion des erreurs et la protection des informations confidentielles doivent être vérifiés avant toute mise en production.
+
+## État du projet
+
+Projet de développement web réalisé dans le cadre de mon parcours en Systèmes Informatiques et Génie Logiciel.
+
+## Auteur
+
+**Sèmine Oyenian**
+
+Développeur web — Laravel, React et bases de données.
+
+GitHub : https://github.com/SEMINE2002
